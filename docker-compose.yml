@@ -32,8 +32,8 @@ services:
       - ./mariadb/data:/var/lib/mariadb
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: laravel_app
-      MYSQL_USER: laravel
+      MYSQL_DATABASE: web_app
+      MYSQL_USER: web_app
       MYSQL_PASSWORD: password
       TZ: Asia/Tokyo
 
