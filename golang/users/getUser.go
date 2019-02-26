@@ -73,6 +73,5 @@ func selectData(request RequestParam) (*User, error) {
 
 	// check whether locking account
 
-
 	return user
 }
