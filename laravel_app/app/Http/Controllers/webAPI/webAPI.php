@@ -36,9 +36,9 @@ class WebAPI
             Log::info(__METHOD__ . 'Response Parameters: ' . $response);
             return $response;
         } catch(RequestException $e) {
-            Log::info(__METHOD__ . 'Exception[Request]: ' . Psr7\str($getRequest()));
+            Log::error(__METHOD__ . 'Exception[Request]: ' . Psr7\str($getRequest()));
             if ($e->hasResponse()) {
-                Log::info(__METHOD__ . 'Exception[Response]: ' . Psr7\str($getResponse()));
+                Log::error(__METHOD__ . 'Exception[Response]: ' . Psr7\str($getResponse()));
                 $errMsg = Config::get('messages.error.login.other');
                 return redirect()->action('ActionIndex')->withErrors($errmsg);
             }
