@@ -10,11 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Auth::routes();
-
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', ActionIndex::class)->name('index');
+Route::get('/login', ActionLogin::class)->name('login');
+Route::get('/dashboard', ActionDashboard::class)->name('dashboard');
+Route::get('/create_user', ActionCreateUser::class)->name('create_user');
+Route::get('/capture_packet', ActionCapturePacket::class)->name('capture_packet');
