@@ -16,7 +16,7 @@ class WebAPI
      * @param   $request    a http resuest with json format
      * @param   $method     http method
      * @param   $path       a path of API
-     * @return  $response
+     * @return  
      */
     public function callAPI($request, $method, $path)
     {
@@ -26,19 +26,21 @@ class WebAPI
         ]);
 
         try {
-            Log::info('Call API >>' . $method . '/'. $path);
-            Log::info('Request Parameters: ' . $request);
+            Log::info(__METHOD__ . '[Call API]' . $method . ' /'. $path);
+            Log::info(__METHOD__ . 'Request Parameters: ' . $request);
             $response = $client->request(
                 $method,
                 $path,
                 ['json' => $request]
             );
-            Log::info('Response Parameters: ' . $response);
+            Log::info(__METHOD__ . 'Response Parameters: ' . $response);
             return $response;
         } catch(RequestException $e) {
-            Log::info('Exception[Request]: ' . Psr7\str($getRequest()));
+            Log::error(__METHOD__ . 'Exception[Request]: ' . Psr7\str($getRequest()));
             if ($e->hasResponse()) {
-                Log::info('Exception[Response]: ' . Psr7\str($getResponse()));
+                Log::error(__METHOD__ . 'Exception[Response]: ' . Psr7\str($getResponse()));
+                $errMsg = Config::get('messages.error.login.other');
+                return redirect()->action('ActionIndex')->withErrors($errmsg);
             }
         }
     }
