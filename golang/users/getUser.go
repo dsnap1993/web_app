@@ -3,10 +3,10 @@ package users
 import (
 	"net/http"
 	"strings"
-	"database/mysql"
 	"github.com/labstack/echo"
+	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	"../database"
+	"../db"
 )
 
 func GetUser() echo.HandlerFunc {
