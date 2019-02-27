@@ -14,7 +14,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// routes
-	e.GET("/users", users.GetUsers())
+	e.GET("/users", users.GetUser)
 
-	e.Logger.Fatal(e,Start(":3000"))
+	e.Logger.Fatal(e.Start(":3000"))
 }

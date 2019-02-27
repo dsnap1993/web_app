@@ -5,9 +5,10 @@ import (
 	"github.com/labstack/echo"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"../db"
 )
 
-func GetUser() echo.HandlerFunc {
+func GetUser() error {
 	var c echo.Context
 	request := new(User)
 	if err := c.Bind(request); err != nil {
@@ -15,13 +16,13 @@ func GetUser() echo.HandlerFunc {
 	}
 
 	//validate(request)
-	status,responseData := setResponseForGetUser(request)
+	status, responseData := setResponseForGetUser(request)
 	if status == http.StatusOK {
 		return c.JSON(status, responseData)
 	} else if status == http.StatusForbidden {
-		return c.JSON(status)
+		return c.JSON(status, http.StatusText(status))
 	} else {
-		return c.JSON(status)
+		return c.JSON(status, http.StatusText(status))
 	}
 }
 
@@ -50,12 +51,12 @@ func setResponseForGetUser(request *User) (int, *User) {
 }*/
 
 func selectData(request *User) (*UsersTable, int) {
-	db := db.ConnectDB()
-	defer db.Close()
+	dbConn := db.ConnectDB()
+	defer dbConn.Close()
 
-	data, err := db.Query("SELECT * FROM users WHERE email=? AND password=?",(*request).Email, (*request).Password)
+	data, err := dbConn.Query("SELECT * FROM users WHERE email=? AND password=?",(*request).Email, (*request).Password)
 	if data == nil {
-		increaseFailureCount(db, request)
+		increaseFailureCount(dbConn, request)
 		return nil, http.StatusForbidden
 	}
 	if err != nil {
@@ -95,10 +96,10 @@ func selectData(request *User) (*UsersTable, int) {
 	return &user, http.StatusOK
 }
 
-func increaseFailureCount(db *sql.DB, request *User) {
-	data, errSelecting := db.Query("SELECT email, failure_count FROM users WHERE email=?",(*request).Email)
+func increaseFailureCount(dbConn *sql.DB, request *User) {
+	data, errSelecting := dbConn.Query("SELECT email, failure_count FROM users WHERE email=?",(*request).Email)
 	if errSelecting != nil {
-		panic(err.Error())
+		panic(errSelecting.Error())
 	}
 
 	var email string
@@ -111,8 +112,8 @@ func increaseFailureCount(db *sql.DB, request *User) {
 		}
 	}
 
-	_, errUpdateing := db.Query("UPDATE users SET failure_count=?",failureCount+1)
-	if errSelecting != nil {
-		panic(err.Error())
+	_, errUpdating := dbConn.Query("UPDATE users SET failure_count=?",failureCount+1)
+	if errUpdating != nil {
+		panic(errUpdating.Error())
 	}
 }
