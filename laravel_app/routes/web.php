@@ -10,8 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', ActionIndex::class)->name('index');
-Route::get('/login', ActionLogin::class)->name('login');
-Route::get('/dashboard', ActionDashboard::class)->name('dashboard');
-Route::get('/create_user', ActionCreateUser::class)->name('create_user');
-Route::get('/capture_packet', ActionCapturePacket::class)->name('capture_packet');
+Route::get('/', IndexAction::class)->name('index');
+Route::get('/login', LoginAction::class)->name('login');
+//Route::get('/dashboard', DashboardAction::class)->name('dashboard');
+//Route::get('/create_user', CreateUserAction::class)->name('create_user');
+//Route::get('/capture_packet', CapturePacketAction::class)->name('capture_packet');
