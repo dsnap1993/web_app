@@ -2,6 +2,8 @@ package users
 
 import (
 	"net/http"
+	"log"
+	"os"
 	"github.com/labstack/echo"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
@@ -11,7 +13,8 @@ import (
 func GetUser(c echo.Context) error {
 	request := new(User)
 	if err := c.Bind(request); err != nil {
-		panic(err.Error())
+		log.Printf("users/GetUser: %s", err)
+		os.Exit(1)
 	}
 
 	//validate(request)
@@ -51,15 +54,20 @@ func setResponseForGetUser(request *User) (int, *User) {
 }*/
 
 func selectData(request *User) (*UsersTable, int) {
-	dbConn := db.ConnectDB()
+	dbConn, dbErr := db.ConnectDB()
+	if dbErr != nil {
+		log.Printf("users/selectData: dbErr = %s", dbErr)
+		os.Exit(1)
+	}
 	defer dbConn.Close()
 
-	data, err := dbConn.Query("SELECT * FROM users WHERE email=? AND password=?",(*request).Email, (*request).Password)
-	if data == nil {
+	data, err := dbConn.Query("SELECT * FROM users WHERE email=? AND password=?", (*request).Email, (*request).Password)
+	if data == nil && err == nil {
 		increaseFailureCount(dbConn, request)
 		return nil, http.StatusForbidden
 	}
 	if err != nil {
+		log.Printf("users/selectData: err = %s", err)
 		return nil, http.StatusInternalServerError
 	}
 
@@ -78,7 +86,8 @@ func selectData(request *User) (*UsersTable, int) {
 
 		err := data.Scan(&userId, &name, &email, &password, &createdAt, &updatedAt, &isLocked, &failureCount, &unlockedAt)
 		if err != nil {
-			panic(err.Error())
+			log.Printf("users/GetUser: err = %s", err)
+			os.Exit(1)
 		}
 		user.UserId = userId
 		user.Name = name
@@ -97,9 +106,10 @@ func selectData(request *User) (*UsersTable, int) {
 }
 
 func increaseFailureCount(dbConn *sql.DB, request *User) {
-	data, errSelecting := dbConn.Query("SELECT email, failure_count FROM users WHERE email=?",(*request).Email)
+	data, errSelecting := dbConn.Query("SELECT email, failure_count FROM users WHERE email=?", (*request).Email)
 	if errSelecting != nil {
-		panic(errSelecting.Error())
+		log.Printf("users/increaseFailureCount: errSelecting = %s", errSelecting)
+		os.Exit(1)
 	}
 
 	var email string
@@ -108,12 +118,14 @@ func increaseFailureCount(dbConn *sql.DB, request *User) {
 	for data.Next() {
 		err := data.Scan(&email, &failureCount)
 		if err != nil {
-			panic(err.Error())
+			log.Printf("users/increaseFailureCount: err = %s", err)
+			os.Exit(1)
 		}
 	}
 
 	_, errUpdating := dbConn.Query("UPDATE users SET failure_count=?",failureCount+1)
 	if errUpdating != nil {
-		panic(errUpdating.Error())
+		log.Printf("users/increaseFailureCount: errUpdating = %s", errUpdating)
+		os.Exit(1)
 	}
 }
