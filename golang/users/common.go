@@ -1,13 +1,13 @@
 package users
 
 import (
-	"github.com/labstack/echo"
 )
 
 type User struct {
 	UserId 		int		`json:"user_id"`
 	Email 		string 	`json:"email"`
 	Password 	string 	`json:"password"`
+	Name		string  `json:"name"`
 }
 
 type UsersTable struct {
@@ -21,3 +21,5 @@ type UsersTable struct {
 	FailureCount int
 	UnlockedAt	 string
 }
+
+
