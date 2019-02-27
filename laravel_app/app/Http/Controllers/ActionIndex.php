@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-class ActionIndex extends Controllers
+class ActionIndex extends Controller
 {
     public function __invoke(Request $request)
     {
