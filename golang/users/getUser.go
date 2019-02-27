@@ -2,63 +2,67 @@ package users
 
 import (
 	"net/http"
-	"strings"
 	"github.com/labstack/echo"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	"../db"
 )
 
 func GetUser() echo.HandlerFunc {
 	var c echo.Context
-	*request := new(User)
-	if err = c.Bind(request); err != nil {
-		return
+	request := new(User)
+	if err := c.Bind(request); err != nil {
+		panic(err.Error())
 	}
 
 	//validate(request)
-	setResponseForGetUser(request, c)
-}
-
-func setResponseForGetUser(request *User, c echo.Context) error {
-	data, err := selectData(request)
-	*responseData := new(User)
-	responseData.UserId = data.UserId
-	responseData.Email = data.Email
-	responseData.Name = data.Name
-
-	if err == nil {
-		return c.Json(http.StatusOK, responseData)
-	} else if err == "403" {
-		return c.Json(http.StatusForbidden)
+	status,responseData := setResponseForGetUser(request)
+	if status == http.StatusOK {
+		return c.JSON(status, responseData)
+	} else if status == http.StatusForbidden {
+		return c.JSON(status)
 	} else {
-		return c.Json(http.StatusInternalServerError)
+		return c.JSON(status)
 	}
 }
 
-func validate(request *User, c echo.Context) {
-	if request.Email != nil {
-		//
-	}
-	if request.Password != nil {
-		//
+func setResponseForGetUser(request *User) (int, *User) {
+	data, status := selectData(request)
+
+	if status == http.StatusOK {
+		responseData := &User{
+			UserId: (*data).UserId,
+			Email: (*data).Email,
+			Name: (*data).Name,
+		}
+		return status, responseData
+	} else {
+		return status, nil
 	}
 }
 
-func selectData(request *User) (*UsersTable, string) {
-	db := database.ConnectDB()
+/*func validate(request *User, c echo.Context) {
+	if (*request).Email != nil {
+		
+	}
+	if (*request).Password != nil {
+		
+	}
+}*/
+
+func selectData(request *User) (*UsersTable, int) {
+	db := db.ConnectDB()
 	defer db.Close()
 
-	data, err := db.Query("SELECT * FROM users WHERE email=? AND password=?",request.Email, request.password)
+	data, err := db.Query("SELECT * FROM users WHERE email=? AND password=?",(*request).Email, (*request).Password)
 	if data == nil {
 		increaseFailureCount(db, request)
-		return nil, "403"
+		return nil, http.StatusForbidden
 	}
 	if err != nil {
-		return nil, "error"
+		return nil, http.StatusInternalServerError
 	}
 
-	*user := UsersTable{}
+	user := UsersTable{}
 	
 	for data.Next() {
 		var userId int
@@ -80,7 +84,7 @@ func selectData(request *User) (*UsersTable, string) {
 		user.Email = email
 		user.Password = password
 		user.CreatedAt = createdAt
-		user.UpdatedAr = updatedAt
+		user.UpdatedAt = updatedAt
 		user.IsLocked = isLocked
 		user.FailureCount = failureCount
 		user.UnlockedAt = unlockedAt
@@ -88,12 +92,12 @@ func selectData(request *User) (*UsersTable, string) {
 
 	// check whether locking account
 
-	return user, nil
+	return &user, http.StatusOK
 }
 
 func increaseFailureCount(db *sql.DB, request *User) {
-	data, err := db.Query("SELECT email, failure_count FROM users WHERE email=?",request.Email)
-	if err != nil {
+	data, errSelecting := db.Query("SELECT email, failure_count FROM users WHERE email=?",(*request).Email)
+	if errSelecting != nil {
 		panic(err.Error())
 	}
 
@@ -107,8 +111,8 @@ func increaseFailureCount(db *sql.DB, request *User) {
 		}
 	}
 
-	_, err := db.Query("UPDATE users SET failure_count=?",failureCount+1)
-	if err != nil {
+	_, errUpdateing := db.Query("UPDATE users SET failure_count=?",failureCount+1)
+	if errSelecting != nil {
 		panic(err.Error())
 	}
 }
