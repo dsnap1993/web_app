@@ -8,8 +8,7 @@ import (
 	"../db"
 )
 
-func GetUser() error {
-	var c echo.Context
+func GetUser(c echo.Context) error {
 	request := new(User)
 	if err := c.Bind(request); err != nil {
 		panic(err.Error())
@@ -17,6 +16,7 @@ func GetUser() error {
 
 	//validate(request)
 	status, responseData := setResponseForGetUser(request)
+
 	if status == http.StatusOK {
 		return c.JSON(status, responseData)
 	} else if status == http.StatusForbidden {
