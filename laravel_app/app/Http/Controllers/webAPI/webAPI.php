@@ -40,7 +40,7 @@ class WebAPI
             if ($e->hasResponse()) {
                 Log::error(__METHOD__ . 'Exception[Response]: ' . Psr7\str($getResponse()));
                 $errMsg = Config::get('messages.error.login.other');
-                return redirect()->action('ActionIndex')->withErrors($errmsg);
+                return redirect()->action('IndexAction')->withErrors($errmsg);
             }
         }
     }
