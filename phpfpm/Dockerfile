@@ -16,4 +16,4 @@ RUN apt-get update \
 
 WORKDIR /var/www/laravel_app
 
-RUN composer require guzzlehttp/guzzlehttp
+RUN composer require guzzlehttp/guzzle
