@@ -37,13 +37,24 @@ services:
       MYSQL_PASSWORD: password
       TZ: Asia/Tokyo
 
-  golang:
-    container_name: golang
-    build: ./golang
+  api:
+    container_name: api
+    build: ./api
     ports:
       - "3000:3000"
     tty: true
     volumes:
-      - ./golang:/go/src/api
+      - ./api:/go/src/api
+    depends_on:
+      - mariadb
+
+  packet_capture:
+    container_name: packet_capture
+    build: ./packet_capture
+    ports:
+      - "4000:4000"
+    tty: true
+    volumes:
+      - ./packet_capture:/go/src/packet_capture
     depends_on:
       - mariadb
