@@ -2,8 +2,8 @@ FROM golang:latest
 
 RUN apt-get update \
 && apt-get install -y \
-libpcap-dev \
-libnet
+libpcap-dev
+#libnet
 
 WORKDIR /go/src/packet_capture
 

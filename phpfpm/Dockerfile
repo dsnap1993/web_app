@@ -16,8 +16,4 @@ RUN apt-get update \
 
 WORKDIR /var/www/laravel_app
 
-RUN composer require guzzlehttp/guzzle
-RUN composer require --dev laravel/dusk
-RUN composer require --dev mockery/mockery
-
-CMD ["composer update"]
+RUN composer require guzzlehttp/guzzlehttp
