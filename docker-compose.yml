@@ -17,7 +17,7 @@ services:
     container_name: phpfpm
     build: ./phpfpm
     volumes:
-     - .:/var/www/
+     - ./laravel_app:/var/www/laravel_app
     environment:
       TZ: Asia/Tokyo
     depends_on:
