@@ -14,4 +14,10 @@ RUN apt-get update \
     && apt-get install -y libpq-dev \
     && docker-php-ext-install pdo_mysql pdo_pgsql
 
-WORKDIR /var/www/
+WORKDIR /var/www/laravel_app
+
+RUN composer require guzzlehttp/guzzle
+RUN composer require --dev laravel/dusk
+RUN composer require --dev mockery/mockery
+
+CMD ["composer update"]
