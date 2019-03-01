@@ -12,6 +12,9 @@ services:
       TZ: Asia/Tokyo
     depends_on:
       - phpfpm
+    networks:
+      web_app_net:
+        ipv4_address: 192.168.0.2
 
   phpfpm:
     container_name: phpfpm
@@ -22,6 +25,9 @@ services:
       TZ: Asia/Tokyo
     depends_on:
       - mariadb
+    networks:
+      web_app_net:
+        ipv4_address: 192.168.0.3
 
   mariadb:
     container_name: mariadb
@@ -36,6 +42,9 @@ services:
       MYSQL_USER: web_app
       MYSQL_PASSWORD: password
       TZ: Asia/Tokyo
+    networks:
+      web_app_net:
+        ipv4_address: 192.168.0.4
 
   api:
     container_name: api
@@ -47,6 +56,9 @@ services:
       - ./api:/go/src/api
     depends_on:
       - mariadb
+    networks:
+      web_app_net:
+        ipv4_address: 192.168.0.5
 
   packet_capture:
     container_name: packet_capture
@@ -58,3 +70,14 @@ services:
       - ./packet_capture:/go/src/packet_capture
     depends_on:
       - mariadb
+    networks:
+      web_app_net:
+        ipv4_address: 192.168.0.6
+
+networks:
+  web_app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.0.0/24
