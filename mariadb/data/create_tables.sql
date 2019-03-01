@@ -5,10 +5,10 @@ CREATE TABLE `web_app`.`users` (
     `email` VARCHAR(20) NOT NULL,
     `password` VARCHAR(50) NOT NULL,
     `created_at` DATETIME NOT NULL,
-    `updated_at` DATETIME,
+    `updated_at` DATETIME DEFAULT 0,
     `is_locked` TINYINT DEFAULT 0,
     `failure_count` INT(10) DEFAULT 0,
-    `unlocked_at` DATETIME
+    `unlocked_at` DATETIME DEFAULT 0
 ) ENGINE=InnoDB;
 
 /* create capture_data table */
