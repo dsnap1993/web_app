@@ -1,14 +1,10 @@
 package users
 
 import (
+	"log"
+	"os"
+	"time"
 )
-
-type User struct {
-	UserId 		int		`json:"user_id"`
-	Email 		string 	`json:"email"`
-	Password 	string 	`json:"password"`
-	Name		string  `json:"name"`
-}
 
 type UsersTable struct {
 	UserId		 int
@@ -17,9 +13,20 @@ type UsersTable struct {
 	Password	 string
 	CreatedAt	 string
 	UpdatedAt	 string
-	IsLocked	 int
+	IsLocked	 bool
 	FailureCount int
 	UnlockedAt	 string
 }
 
+func strToTime(str string) time.Time {
+	t, err := time.Parse("2006-01-02 15:04:05", str)
+	if err != nil {
+		log.Printf("users/strToTime: err = %s", err)
+		os.Exit(1)
+	}
+	return t
+}
 
+func setErrorReponse() {
+
+}
