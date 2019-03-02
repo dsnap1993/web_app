@@ -35,3 +35,6 @@ CREATE TABLE `web_app`.`protocols` (
     `port_num` INT(10) NOT NULL,
     `protocol_name` VARCHAR(255) DEFAULT 'unknown'
 ) ENGINE=InnoDB;
+
+/* insert into users */
+INSERT INTO `users` (`name`, `email`, `password`, `created_at`) VALUES('test', 'test@test.com', 'passwd', NOW());
