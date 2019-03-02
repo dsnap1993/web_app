@@ -21,10 +21,10 @@ class Controller extends BaseController
      */
     protected function encodeToJson(Request $request)
     {
-        $arrayRequest = array();
         $arrayRequest = $request->all();
+        unset($arrayRequest['_token']);
         $jsonRequest = json_encode($arrayRequest);
-        Log::debug(__METHOD__ . 'jsonRequest = ' . $jsonRequest);
+        Log::debug(__METHOD__ . ' jsonRequest = ' . $jsonRequest);
         return $jsonRequest;
     }
 }
