@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 class IndexAction extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke()
     {
-        return redirect()->view('auth.login');
+        return redirect('/login');
     }
 }
