@@ -12,7 +12,6 @@ import (
 )
 
 type request struct {
-	UserId 		int		`json:"user_id"`
 	Email 		string 	`json:"email"`
 	Password 	string 	`json:"password"`
 }
@@ -31,17 +30,18 @@ func GetUser(c echo.Context) error {
 	}
 
 	//validate(request)
-	status, responseData := setResponseForGetUser(request)
+	data, status := selectData(request)
+	status, responseData := createResponseForGetUser(data)
 
 	if status == http.StatusOK {
+		log.Printf("[response] %d %s", status, responseData)
 		return c.JSON(status, responseData)
 	} else {
 		return c.JSON(status, http.StatusText(status))
 	}
 }
 
-func setResponseForGetUser(request *request) (int, *response) {
-	data, status := selectData(request)
+func createResponseForGetUser(data *UsersTable) (int, *response) {
 
 	if status == http.StatusOK {
 		responseData := &response{
@@ -121,7 +121,7 @@ func selectData(request *request) (*UsersTable, int) {
 	}
 
 	if user.IsLocked {
-		if isPastedLockingAccount(dbConn, user.Email) {
+		if isPastedLockingPeriod(dbConn, user.Email) {
 			unlockAccount(dbConn, user.Email)
 		} else {
 			return nil, http.StatusForbidden
@@ -179,7 +179,7 @@ func unlockAccount(dbConn *sql.DB, email string) {
 	}
 }
 
-func isPastedLockingAccount(dbConn *sql.DB, email string) bool {
+func isPastedLockingPeriod(dbConn *sql.DB, email string) bool {
 	var unlockedAt string
 	now := time.Now()
 
