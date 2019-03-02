@@ -5,6 +5,7 @@ use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Log;
+
 class WebAPI
 {
     /**
