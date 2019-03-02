@@ -31,7 +31,7 @@ func GetUser(c echo.Context) error {
 
 	//validate(request)
 	data, status := selectData(request)
-	status, responseData := createResponseForGetUser(data)
+	status, responseData := createResponseForGetUser(data, status)
 
 	if status == http.StatusOK {
 		log.Printf("[response] %d %s", status, responseData)
@@ -41,7 +41,7 @@ func GetUser(c echo.Context) error {
 	}
 }
 
-func createResponseForGetUser(data *UsersTable) (int, *response) {
+func createResponseForGetUser(data *UsersTable, status int) (int, *response) {
 
 	if status == http.StatusOK {
 		responseData := &response{
