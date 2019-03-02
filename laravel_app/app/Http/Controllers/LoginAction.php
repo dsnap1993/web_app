@@ -11,8 +11,6 @@ use Log;
 
 class LoginAction extends Controller
 {
-    private $apiPath;
-
     /**
      * Create a new controller instance.
      *
@@ -20,7 +18,7 @@ class LoginAction extends Controller
      */
     public function __construct()
     {
-        $this->apiPath = '/users'; // provisional path
+        $this->apiPath = '/users';
     }
 
     public function show()
@@ -30,23 +28,24 @@ class LoginAction extends Controller
 
     public function postLogin(Request $request)
     {
-        $jsonRequest = $this->encodeToJson($request);
+        $apiPath = '/users'; // use the value in config
+        $requestParams = $request->all();
+        unset($requestParams['_token']);
 
-        $response = WebAPI::callAPI($jsonRequest, 'GET', $apiPath);
-        $statusCode = $response->getStatusCode();
-        Log::info(__METHOD__ . 'statusCode = ' . $statusCode);
+        $webApi = new WebAPI;
+        $response = $webApi->callAPI($requestParams, 'GET', $apiPath);
     
-        if ($statusCode == 200) {
+        if ($response['statusCode'] == 200) {
             return redirect()->route('dashboard');
-        } else if ($statusCode == 401) {
-            $errMsg = Config::get('messages.error.login.fail');
-            return redirect()->back()->withErrors($errmsg);
-        } else if ($statusCode == 403) {
-            $errMsg = Config::get('messages.error.login.locked');
-            return redirect()->back()->withErrors($errmsg);
+        } else if ($response['statusCode'] == 401) {
+            $errMsg = config('messages.error.login.fail');
+            return redirect()->back()->withErrors($errMsg);
+        } else if ($response['statusCode'] == 403) {
+            $errMsg = config('messages.error.login.locked');
+            return redirect()->back()->withErrors($errMsg);
         } else {
-            $errMsg = Config::get('messages.error.login.other');
-            return redirect()->back()->withErrors($errmsg);
+            $errMsg = config('messages.error.login.other');
+            return redirect()->back()->withErrors($errMsg);
         }
     }
 }
