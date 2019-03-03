@@ -26,7 +26,3 @@ func strToTime(str string) time.Time {
 	}
 	return t
 }
-
-func setErrorReponse() {
-
-}
