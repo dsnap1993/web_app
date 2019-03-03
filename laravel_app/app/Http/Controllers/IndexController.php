@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-class IndexAction extends Controller
+class IndexController extends Controller
 {
     public function __invoke()
     {
