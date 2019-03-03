@@ -69,7 +69,7 @@ func insertData(request *requestForPOST) (*UsersTable, int) {
 
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
-		log.Printf("users/selectData: dbErr = %s", dbErr)
+		log.Printf("users/insertData: dbErr = %s", dbErr)
 		os.Exit(1)
 	}
 	defer dbConn.Close()
