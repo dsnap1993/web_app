@@ -34,6 +34,7 @@ class LoginAction extends Controller
 
         $webApi = new WebAPI;
         $response = $webApi->callAPI($requestParams, 'GET', $apiPath);
+        Log::debug(__METHOD__ . ' response = ' . print_r($response, true));
     
         if ($response['statusCode'] == 200) {
             return redirect()->route('dashboard');
