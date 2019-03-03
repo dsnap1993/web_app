@@ -13,8 +13,8 @@
 
 /* login page */
 Route::get('/', IndexController::class)->name('index');
-Route::get('/login', 'LoginController@show')->name('login');
-Route::post('/login/post_login', 'LoginController@postLogin')->name('login');
+Route::get('/login', 'Auth\LoginController@show')->name('login');
+Route::post('/login', 'Auth\LoginController@postLogin')->name('login');
 
 Auth::routes();
 
