@@ -13,8 +13,10 @@ func main() {
 	//e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	// routes
+	/* routes */
+	// /users
 	e.GET("/users", users.GetUser)
+	e.POST("/users", users.PostUser)
 
 	//e.Logger.Fatal(e.Start(":3000"))
 	e.Start(":3000")
