@@ -17,6 +17,7 @@ func main() {
 	// /users
 	e.GET("/users", users.GetUser)
 	e.POST("/users", users.PostUser)
+	e.PUT("/users", users.PutUser)
 
 	//e.Logger.Fatal(e.Start(":3000"))
 	e.Start(":3000")
