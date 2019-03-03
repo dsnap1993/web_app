@@ -11,19 +11,19 @@ import (
 	"../db"
 )
 
-type request struct {
+type requestForGET struct {
 	Email 		string 	`json:"email"`
 	Password 	string 	`json:"password"`
 }
 
-type response struct {
+type responseForGET struct {
 	UserId 		int		`json:"user_id"`
 	Email 		string 	`json:"email"`
 	Name		string  `json:"name"`
 }
 
 func GetUser(c echo.Context) error {
-	request := new(request)
+	request := new(requestForGET)
 	if err := c.Bind(request); err != nil {
 		log.Printf("users/GetUser: %s", err)
 		os.Exit(1)
@@ -41,10 +41,9 @@ func GetUser(c echo.Context) error {
 	}
 }
 
-func createResponseForGetUser(data *UsersTable, status int) (int, *response) {
-
+func createResponseForGetUser(data *UsersTable, status int) (int, *responseForGET) {
 	if status == http.StatusOK {
-		responseData := &response{
+		responseData := &responseForGET{
 			UserId: (*data).UserId,
 			Email: (*data).Email,
 			Name: (*data).Name,
@@ -64,7 +63,7 @@ func createResponseForGetUser(data *UsersTable, status int) (int, *response) {
 	}
 }*/
 
-func selectData(request *request) (*UsersTable, int) {
+func selectData(request *requestForGET) (*UsersTable, int) {
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("users/selectData: dbErr = %s", dbErr)
@@ -131,7 +130,7 @@ func selectData(request *request) (*UsersTable, int) {
 	return &user, http.StatusOK
 }
 
-func increaseFailureCount(dbConn *sql.DB, request *request) int {
+func increaseFailureCount(dbConn *sql.DB, request *requestForGET) int {
 	var failureCount int
 
 	errSelecting := dbConn.QueryRow("SELECT failure_count FROM users WHERE email=?", (*request).Email).Scan(&failureCount)
@@ -149,7 +148,7 @@ func increaseFailureCount(dbConn *sql.DB, request *request) int {
 	return failureCount+1
 }
 
-func lockAccount(dbConn *sql.DB, request *request) {
+func lockAccount(dbConn *sql.DB, request *requestForGET) {
 	now := time.Now()
 	unlockedAt := now.Add(24 * time.Hour)
 	formatedTime := unlockedAt.Format("2006-01-02 15:04:05")
@@ -161,7 +160,7 @@ func lockAccount(dbConn *sql.DB, request *request) {
 	}
 }
 
-func isLockedAccount(dbConn *sql.DB, request *request) bool {
+func isLockedAccount(dbConn *sql.DB, request *requestForGET) bool {
 	var isLocked bool
 	err := dbConn.QueryRow("SELECT is_locked FROM users WHERE email=?", (*request).Email).Scan(&isLocked)
 	if err != nil {
