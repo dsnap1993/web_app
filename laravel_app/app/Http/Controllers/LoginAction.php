@@ -18,7 +18,7 @@ class LoginAction extends Controller
      */
     public function __construct()
     {
-        $this->apiPath = '/users';
+        //
     }
 
     public function show()
@@ -28,7 +28,7 @@ class LoginAction extends Controller
 
     public function postLogin(Request $request)
     {
-        $apiPath = '/users'; // use the value in config
+        $apiPath = config('api.users');
         $requestParams = $request->all();
         unset($requestParams['_token']);
 

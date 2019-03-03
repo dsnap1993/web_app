@@ -20,8 +20,8 @@ class WebAPI
     public function callAPI($request, $method, $path)
     {
         $client = new Client([
-            'base_uri' => env('API_URL'), 
-            'timeout' => env('API_TIMEOUT')
+            'base_uri' => config('api.url'), 
+            'timeout' => config('api.timeout')
         ]);
 
             Log::info(__METHOD__ . ' [Call API]' . $method . $path);
