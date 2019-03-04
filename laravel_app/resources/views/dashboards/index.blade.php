@@ -7,7 +7,7 @@
                 <div class="card-header">dashboard</div>
 
                 <div class="card-body">
-                dashboard
+                Dear {{ Session::get('name') }}, welcome to our web app!
                 </div>
             </div>
         </div>
