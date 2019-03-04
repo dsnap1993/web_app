@@ -127,6 +127,11 @@ func selectData(request *requestForGET) (*UsersTable, int) {
 		}
 	}
 
+	// reset failure_count
+	if user.FailureCount != 0 {
+		updateUsers(dbConn, user.Email, 0)
+	}
+
 	return &user, http.StatusOK
 }
 
@@ -139,13 +144,17 @@ func increaseFailureCount(dbConn *sql.DB, request *requestForGET) int {
 		os.Exit(1)
 	}
 
-	_, errUpdating := dbConn.Query("UPDATE users SET failure_count=? WHERE email=?", failureCount+1, (*request).Email)
-	if errUpdating != nil {
-		log.Printf("users/increaseFailureCount: errUpdating = %s", errUpdating)
-		os.Exit(1)
-	}
+	updateUsers(dbConn, (*request).Email, failureCount)
 
 	return failureCount+1
+}
+
+func updateUsers(dbConn *sql.DB, email string, failureCount int) {
+	_, err := dbConn.Query("UPDATE users SET failure_count=? WHERE email=?", failureCount+1, email)
+	if err != nil {
+		log.Printf("users/updateUsers: err = %s", err)
+		os.Exit(1)
+	}
 }
 
 func lockAccount(dbConn *sql.DB, request *requestForGET) {
