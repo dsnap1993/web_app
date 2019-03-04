@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Crypt;
 use App\Http\WebAPI\WebAPI;
 use Log;
 
@@ -37,9 +38,13 @@ class LoginController extends Controller
      */
     public function postLogin(Request $request)
     {
+        $requestParams =array();
         $apiPath = config('api.users');
-        $requestParams = $request->all();
-        unset($requestParams['_token']);
+
+        // create request params
+        $requestParams['email'] = $request->input('email');
+        //$requestParams['password'] = Crypt::encryptString($request->input('passwd'));
+        $requestParams['password'] = $request->input('password');
 
         // call API GET /users
         $webApi = new WebAPI;
@@ -50,14 +55,13 @@ class LoginController extends Controller
         $array = json_decode($response['body'], true);
         Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
 
-        // set response data in session
-        $request->session()->put('user_id', $array['user_id']);
-        $request->session()->put('email', $array['email']);
-        $request->session()->put('name', $array['name']);
-
         // redirect page
         switch ($response['statusCode']) {
             case 200:
+                // set response data in session
+                $request->session()->put('user_id', $array['user_id']);
+                $request->session()->put('email', $array['email']);
+                $request->session()->put('name', $array['name']);
                 return redirect()->to('/dashboard');
             case 401:
                 $errMsg = config('messages.error.login.fail');
