@@ -17,11 +17,22 @@ class DashboardController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth');
     }
     
-    public function show()
+    /**
+     * Show dashboard index page
+     * 
+     * @param   Request     $request
+     * @return  \Illuminate\Contracts\Support\Renderable
+     */
+    public function index(Request $request)
     {
-        return view('dashboard.index');
+        $result = $this->checkLoggingIn($request);
+        Log::debug(__METHOD__ . ' result = ' . $result);
+        if ($result) {
+            return view('dashboards.index');
+        } else {
+            return redirect()->to('/');
+        }
     }
 }
