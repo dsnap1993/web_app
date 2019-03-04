@@ -13,12 +13,10 @@
 
 /* login page */
 Route::get('/', IndexController::class)->name('index');
-Route::get('/login', 'Auth\LoginController@show')->name('login');
-Route::post('/login', 'Auth\LoginController@postLogin')->name('login');
-
-Auth::routes();
+Route::get('/login', 'LoginController@show')->name('login');
+Route::post('/login', 'LoginController@postLogin')->name('login');
 
 /* dashboard page */
-Route::get('/dashboard', 'DashboardController@show')->name('dashboard');
+Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 //Route::get('/create_user', CreateUserController::class)->name('create_user');
 //Route::get('/capture_packet', CapturePacketController::class)->name('capture_packet');
