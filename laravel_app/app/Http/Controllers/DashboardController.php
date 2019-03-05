@@ -27,12 +27,6 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $result = $this->checkLoggingIn($request);
-        Log::debug(__METHOD__ . ' result = ' . $result);
-        if ($result) {
             return view('dashboards.index');
-        } else {
-            return redirect()->to('/');
-        }
     }
 }
