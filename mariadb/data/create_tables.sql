@@ -37,4 +37,4 @@ CREATE TABLE `web_app`.`protocols` (
 ) ENGINE=InnoDB;
 
 /* insert into users */
-INSERT INTO `users` (`name`, `email`, `password`, `created_at`) VALUES('test', 'test@test.com', 'passwd', NOW());
+INSERT INTO `web_app`.`users` (`name`, `email`, `password`, `created_at`) VALUES('test', 'test@test.com', 'passwd', NOW());
