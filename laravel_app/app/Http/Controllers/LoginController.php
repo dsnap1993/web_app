@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use Illuminate\Support\Facades\Crypt;
 use App\Http\WebAPI\WebAPI;
 use Log;
 
@@ -42,9 +41,10 @@ class LoginController extends Controller
         $apiPath = config('api.users');
 
         // create request params
-        $requestParams['email'] = $request->input('email');
-        //$requestParams['password'] = Crypt::encryptString($request->input('passwd'));
-        $requestParams['password'] = $request->input('password');
+        $requestParams = array(
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+        );
 
         // call API GET /users
         $webApi = new WebAPI;
