@@ -14,7 +14,7 @@ class AuthUser
     {
         // check whether setting data on session
         if (!($request->session()->has('user_id'))) {
-            $request->session()->flash('msg_session_timeout', 'Session Time Out');
+            $request->session()->flash('err_msg', 'Failed to authenticate');
             return redirect()->to('/');
         }
 
