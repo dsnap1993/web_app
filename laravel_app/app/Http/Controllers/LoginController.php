@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Requests;
+use App\Http\Requests\LoginRequest;
 use App\Http\WebAPI\WebAPI;
 use Log;
 
@@ -35,7 +34,7 @@ class LoginController extends Controller
      * @param  Request $request
      * @return  \Illuminate\Contracts\Support\Renderable
      */
-    public function postLogin(Request $request)
+    public function postLogin(LoginRequest $request)
     {
         $request->session()->flush();
         $requestParams =array();
@@ -63,6 +62,7 @@ class LoginController extends Controller
                 $request->session()->put('user_id', $array['user_id']);
                 $request->session()->put('email', $array['email']);
                 $request->session()->put('name', $array['name']);
+                $request->session()->put('password', $requestParams['password']);
                 return redirect()->to('/dashboard');
             case 401:
                 $errMsg = config('messages.error.login.fail');
