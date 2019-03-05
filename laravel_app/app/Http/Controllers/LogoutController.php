@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 
 class LogoutController extends Controller
 {
@@ -20,6 +19,6 @@ class LogoutController extends Controller
     public function __invoke(Request $request)
     {
         $request->session()->flush();
-        return view('/login');
+        return redirect()->to('/');
     }
 }
