@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
-class LoginController extends Controller
+class LogoutController extends Controller
 {
     /**
      * Create a new controller instance.
