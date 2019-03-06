@@ -65,6 +65,7 @@ func createResponseForGetUser(data *db.UsersTable, status int) (int, *responseFo
 }*/
 
 func selectData(request *requestForGET) (*db.UsersTable, int) {
+	env.LoadEnv()
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("users/selectData: dbErr = %s", dbErr)
@@ -121,7 +122,7 @@ func selectData(request *requestForGET) (*db.UsersTable, int) {
 			return nil, http.StatusForbidden
 		}
 		result := increaseFailureCount(dbConn, request)
-		if result == 5 { // use the value in .env
+		if result == os.GetEnv("LIMIT_FAILING") {
 			lockAccount(dbConn, request)
 		}
 		return nil, http.StatusUnauthorized

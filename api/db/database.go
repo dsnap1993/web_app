@@ -3,17 +3,21 @@ package db
 import (
 	"fmt"
 	"log"
+	"os"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"../env"
 )
 
 func ConnectDB() (*sql.DB, error) {
-	host := "192.168.0.4"
-	port := "3306"
-	user := "web_app"
-	passwd := "password"
-	dbname := "web_app"
-	protocol := "tcp"
+	env.LoadEnv()
+
+	host := os.GetEnv("DB_HOST")
+	port := os.GetEnv("DB_PORT")
+	user := os.GetEnv("DB_USER")
+	passwd := os.GetEnv("DB_PASSWD")
+	dbname := os.GetEnv("DB_NAME")
+	protocol := os.GetEnv("DB_PROTOCOL")
 
 	connectionInfo := fmt.Sprintf("%s:%s@%s(%s:%s)/%s",
 		user, passwd, protocol, host, port, dbname)
@@ -26,5 +30,3 @@ func ConnectDB() (*sql.DB, error) {
 	}
 	return db, nil
 }
-
-// get connection info from .env

@@ -7,8 +7,9 @@ import (
 	"time"
 	"github.com/labstack/echo"
 	_ "github.com/go-sql-driver/mysql"
-	"../db"
 	"golang.org/x/crypto/bcrypt"
+	"../db"
+	"../env"
 )
 
 type requestForPOST struct {
@@ -24,7 +25,8 @@ type responseForPOST struct {
 }
 
 func (req *requestForPOST) hashPassword() string {
-	hashPass, err := bcrypt.GenerateFromPassword([]byte((*req).Password), 10) // get from .env
+	env.LoadEnv()
+	hashPass, err := bcrypt.GenerateFromPassword([]byte((*req).Password), os.GetEnv("COST_FOR_HASHING")) // get from .env
 	if err != nil {
 		log.Printf("requestForPOST/hashPassword: err = %s", err)
 	}
