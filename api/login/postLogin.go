@@ -1,4 +1,4 @@
-package users
+package login
 
 import (
 	"net/http"
@@ -9,6 +9,7 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"../db"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type requestForGET struct {
@@ -22,7 +23,7 @@ type responseForGET struct {
 	Name		string  `json:"name"`
 }
 
-func GetUser(c echo.Context) error {
+func PostLogin(c echo.Context) error {
 	request := new(requestForGET)
 	if err := c.Bind(request); err != nil {
 		log.Printf("users/GetUser: %s", err)
@@ -41,7 +42,7 @@ func GetUser(c echo.Context) error {
 	}
 }
 
-func createResponseForGetUser(data *UsersTable, status int) (int, *responseForGET) {
+func createResponseForGetUser(data *db.UsersTable, status int) (int, *responseForGET) {
 	if status == http.StatusOK {
 		responseData := &responseForGET{
 			UserId: (*data).UserId,
@@ -63,7 +64,7 @@ func createResponseForGetUser(data *UsersTable, status int) (int, *responseForGE
 	}
 }*/
 
-func selectData(request *requestForGET) (*UsersTable, int) {
+func selectData(request *requestForGET) (*db.UsersTable, int) {
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("users/selectData: dbErr = %s", dbErr)
@@ -71,13 +72,13 @@ func selectData(request *requestForGET) (*UsersTable, int) {
 	}
 	defer dbConn.Close()
 
-	data, err := dbConn.Query("SELECT * FROM users WHERE email=? AND password=?", (*request).Email, (*request).Password)
+	data, err := dbConn.Query("SELECT * FROM users WHERE email=?", (*request).Email)
 	if err != nil {
 		log.Printf("users/selectData: err = %s", err)
 		return nil, http.StatusInternalServerError
 	}
 
-	user := UsersTable{}
+	user := db.UsersTable{}
 	count := 0
 	
 	for data.Next() {
@@ -109,6 +110,12 @@ func selectData(request *requestForGET) (*UsersTable, int) {
 	}
 	// check whether empty set
 	if count == 0 {
+		return nil, http.StatusBadRequest
+	}
+
+	resultComparingPasswd := bcrypt.CompareHashAndPassword([]byte((*request).Password), []byte(user.Password))
+
+	if resultComparingPasswd == false {
 		if isLockedAccount(dbConn, request) {
 			return nil, http.StatusForbidden
 		}
@@ -201,4 +208,13 @@ func isPastedLockingPeriod(dbConn *sql.DB, email string) bool {
 	} else {
 		return false
 	}
+}
+
+func strToTime(str string) time.Time {
+	t, err := time.Parse("2006-01-02 15:04:05", str)
+	if err != nil {
+		log.Printf("users/strToTime: err = %s", err)
+		os.Exit(1)
+	}
+	return t
 }
