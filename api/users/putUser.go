@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"log"
 	"os"
+	"time"
 	"github.com/labstack/echo"
 	_ "github.com/go-sql-driver/mysql"
 	"../db"
@@ -21,6 +22,14 @@ type responseForPUT struct {
 	UserId 		int		`json:"user_id"`
 	Name		string  `json:"name"`
 	Email 		string 	`json:"email"`
+}
+
+func (req *requestForPUT) hashPassword() string {
+	hashPass, err := bcrypt.GenerateFromPassword([]byte((*req).Password), 10) // get from .env
+	if err != nil {
+		log.Printf("requestForPOST/hashPassword: err = %s", err)
+	}
+	return string(hashPass)
 }
 
 func PutUser(c echo.Context) error {
@@ -65,6 +74,9 @@ func createResponseForPutUser(data *db.UsersTable, status int) (int, *responseFo
 }*/
 
 func updateData(request *requestForPUT) (*db.UsersTable, int) {
+	now := time.Now()
+	formatedTime := now.Format("2006-01-02 15:04:05")
+
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("users/updateData: dbErr = %s", dbErr)
@@ -73,14 +85,15 @@ func updateData(request *requestForPUT) (*db.UsersTable, int) {
 	defer dbConn.Close()
 
 	stmt, err := dbConn.Prepare(`
-        UPDATE users SET name=?, email=?, password=? WHERE user_id=?
+        UPDATE users SET name=?, email=?, password=?, updated_at=? WHERE user_id=?
 	`)
     if err != nil {
         log.Printf("users/updateData: err = %s", err)
     }
 	defer stmt.Close()
 
-	_, errExecuting := stmt.Exec((*request).Name, (*request).Email, (*request).Password, (*request).UserId)
+	hashPass := request.hashPassword()
+	_, errExecuting := stmt.Exec((*request).Name, (*request).Email, hashPass, formatedTime, (*request).UserId)
 	if errExecuting != nil {
 		log.Printf("users/updateData: errExecuting = %s", errExecuting)
 		return nil, http.StatusInternalServerError
