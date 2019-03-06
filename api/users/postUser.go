@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo"
 	_ "github.com/go-sql-driver/mysql"
 	"../db"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type requestForPOST struct {
@@ -41,7 +42,7 @@ func PostUser(c echo.Context) error {
 	}
 }
 
-func createResponseForPostUser(data *UsersTable, status int) (int, *responseForPOST) {
+func createResponseForPostUser(data *db.UsersTable, status int) (int, *responseForPOST) {
 	if status == http.StatusCreated {
 		responseData := &responseForPOST{
 			UserId: (*data).UserId,
@@ -63,7 +64,7 @@ func createResponseForPostUser(data *UsersTable, status int) (int, *responseForP
 	}
 }*/
 
-func insertData(request *requestForPOST) (*UsersTable, int) {
+func insertData(request *requestForPOST) (*db.UsersTable, int) {
 	now := time.Now()
 	formatedTime := now.Format("2006-01-02 15:04:05")
 
@@ -89,7 +90,7 @@ func insertData(request *requestForPOST) (*UsersTable, int) {
 		return nil, http.StatusInternalServerError
 	}
 
-	user := UsersTable{}
+	user := db.UsersTable{}
 	userId, errLastInsertId := ret.LastInsertId()
 	if errExecuting != nil {
 		log.Printf("users/insertData: errLastInsertId = %s", errLastInsertId)

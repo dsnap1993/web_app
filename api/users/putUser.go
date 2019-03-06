@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo"
 	_ "github.com/go-sql-driver/mysql"
 	"../db"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type requestForPUT struct {
@@ -41,7 +42,7 @@ func PutUser(c echo.Context) error {
 	}
 }
 
-func createResponseForPutUser(data *UsersTable, status int) (int, *responseForPUT) {
+func createResponseForPutUser(data *db.UsersTable, status int) (int, *responseForPUT) {
 	if status == http.StatusOK {
 		responseData := &responseForPUT{
 			UserId: (*data).UserId,
@@ -63,7 +64,7 @@ func createResponseForPutUser(data *UsersTable, status int) (int, *responseForPU
 	}
 }*/
 
-func updateData(request *requestForPUT) (*UsersTable, int) {
+func updateData(request *requestForPUT) (*db.UsersTable, int) {
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("users/updateData: dbErr = %s", dbErr)
@@ -85,7 +86,7 @@ func updateData(request *requestForPUT) (*UsersTable, int) {
 		return nil, http.StatusInternalServerError
 	}
 
-	user := UsersTable{}
+	user := db.UsersTable{}
 	user.UserId = (*request).UserId
 	user.Name = (*request).Name
 	user.Email = (*request).Email
