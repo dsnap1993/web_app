@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"./users"
+	"./login"
 )
 
 func main() {
@@ -14,8 +15,9 @@ func main() {
 	e.Use(middleware.Recover())
 
 	/* routes */
+	// /login
+	e.POST("/login", login.PostLogin)
 	// /users
-	e.GET("/users", users.GetUser)
 	e.POST("/users", users.PostUser)
 	e.PUT("/users", users.PutUser)
 
