@@ -28,7 +28,7 @@ type responseForPUT struct {
 func (request *requestForPUT) validate() (bool, string) {
 	errMsg := ""
 	result := true
-	if (*request).UserId == nil || (*request).Email == "" || (*request).Email == "" || (*request).Password == "" {
+	if (*request).UserId == 0 || (*request).Email == "" || (*request).Email == "" || (*request).Password == "" {
 		errMsg = "Please check request parameters."
 		result = false
 	}
