@@ -23,6 +23,14 @@ type responseForPOST struct {
 	Email 		string 	`json:"email"`
 }
 
+func (req *requestForPOST) hashPassword() string {
+	hashPass, err := bcrypt.GenerateFromPassword([]byte((*req).Password), 10) // get from .env
+	if err != nil {
+		log.Printf("requestForPOST/hashPassword: err = %s", err)
+	}
+	return string(hashPass)
+}
+
 func PostUser(c echo.Context) error {
 	request := new(requestForPOST)
 	if err := c.Bind(request); err != nil {
@@ -84,7 +92,8 @@ func insertData(request *requestForPOST) (*db.UsersTable, int) {
     }
 	defer stmt.Close()
 
-	ret, errExecuting := stmt.Exec((*request).Name, (*request).Email, (*request).Password, formatedTime)
+	hashPass := request.hashPassword()
+	ret, errExecuting := stmt.Exec((*request).Name, (*request).Email, hashPass, formatedTime)
 	if errExecuting != nil {
 		log.Printf("users/insertData: errExecuting = %s", errExecuting)
 		return nil, http.StatusInternalServerError
