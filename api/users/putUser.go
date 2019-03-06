@@ -25,6 +25,16 @@ type responseForPUT struct {
 	Email 		string 	`json:"email"`
 }
 
+func (request *requestForPUT) validate() (bool, string) {
+	errMsg := ""
+	result := true
+	if (*request).UserId == nil || (*request).Email == "" || (*request).Email == "" || (*request).Password == "" {
+		errMsg = "Please check request parameters."
+		result = false
+	}
+	return result, errMsg
+}
+
 func (req *requestForPUT) hashPassword() string {
 	//env.LoadEnv()
 	cost := 10
@@ -42,7 +52,12 @@ func PutUser(c echo.Context) error {
 		os.Exit(1)
 	}
 
-	//validate(request)
+	result, errMsg := request.validate()
+	if result == false {
+		log.Printf("[response] %d %s", http.StatusBadRequest, errMsg)
+		return c.JSON(http.StatusBadRequest, errMsg)
+	}
+
 	data, status := updateData(request)
 	status, responseData := createResponseForPutUser(data, status)
 
@@ -50,6 +65,7 @@ func PutUser(c echo.Context) error {
 		log.Printf("[response] %d %s", status, responseData)
 		return c.JSON(status, responseData)
 	} else {
+		log.Printf("[response] %d", status)
 		return c.JSON(status, nil)
 	}
 }
@@ -66,15 +82,6 @@ func createResponseForPutUser(data *db.UsersTable, status int) (int, *responseFo
 		return status, nil
 	}
 }
-
-/*func validate(request *request, c echo.Context) {
-	if (*request).Email != nil {
-		
-	}
-	if (*request).Password != nil {
-		
-	}
-}*/
 
 func updateData(request *requestForPUT) (*db.UsersTable, int) {
 	now := time.Now()

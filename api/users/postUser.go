@@ -24,6 +24,16 @@ type responseForPOST struct {
 	Email 		string 	`json:"email"`
 }
 
+func (request *requestForPOST) validate() (bool, string) {
+	errMsg := ""
+	result := true
+	if (*request).Name == "" || (*request).Email == "" || (*request).Password == ""{
+		errMsg = "Please check request parameters."
+		result = false
+	}
+	return result, errMsg
+}
+
 func (req *requestForPOST) hashPassword() string {
 	//env.LoadEnv()
 	cost := 10
@@ -41,7 +51,12 @@ func PostUser(c echo.Context) error {
 		os.Exit(1)
 	}
 
-	//validate(request)
+	result, errMsg := request.validate()
+	if result == false {
+		log.Printf("[response] %d %s", http.StatusBadRequest, errMsg)
+		return c.JSON(http.StatusBadRequest, errMsg)
+	}
+
 	data, status := insertData(request)
 	status, responseData := createResponseForPostUser(data, status)
 
@@ -65,15 +80,6 @@ func createResponseForPostUser(data *db.UsersTable, status int) (int, *responseF
 		return status, nil
 	}
 }
-
-/*func validate(request *request, c echo.Context) {
-	if (*request).Email != nil {
-		
-	}
-	if (*request).Password != nil {
-		
-	}
-}*/
 
 func insertData(request *requestForPOST) (*db.UsersTable, int) {
 	now := time.Now()
