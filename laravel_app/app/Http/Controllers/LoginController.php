@@ -38,7 +38,7 @@ class LoginController extends Controller
     {
         $request->session()->flush();
         $requestParams =array();
-        $apiPath = config('api.users');
+        $apiPath = config('api.login');
 
         // create request params
         $requestParams = array(
@@ -48,7 +48,7 @@ class LoginController extends Controller
 
         // call API GET /users
         $webApi = new WebAPI;
-        $response = $webApi->callAPI($requestParams, 'GET', $apiPath);
+        $response = $webApi->callAPI($requestParams, 'POST', $apiPath);
         Log::debug(__METHOD__ . ' response = ' . print_r($response, true));
 
         // set response data in session
