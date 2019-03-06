@@ -37,7 +37,7 @@ func PostUser(c echo.Context) error {
 		log.Printf("[response] %d %s", status, responseData)
 		return c.JSON(status, responseData)
 	} else {
-		return c.JSON(status, http.StatusText(status))
+		return c.JSON(status, nil)
 	}
 }
 
