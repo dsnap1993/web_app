@@ -20,13 +20,13 @@ class AuthUser
 
         // call API GET /users
         $webApi = new WebAPI;
-        $apiPath = config('api.users');
+        $apiPath = config('api.login');
 
         $requestParams = array(
             'email' => $request->session()->get('email'),
             'password' => $request->session()->get('password'),
         );
-        $response = $webApi->callAPI($requestParams, 'GET', $apiPath);
+        $response = $webApi->callAPI($requestParams, 'POST', $apiPath);
 
         // redirect page
         if ($response['statusCode'] == 200) {

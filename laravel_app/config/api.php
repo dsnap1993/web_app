@@ -7,6 +7,7 @@ return array(
     /* API TIMEOUT */
     'timeout' => env('API_TIMEOUT'),
     
-    /* users */
+    /* API Path */
+    'login' => '/login',
     'users' => '/users',
 );

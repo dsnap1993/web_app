@@ -4,9 +4,12 @@ import (
 	"net/http"
 	"log"
 	"os"
+	"time"
 	"github.com/labstack/echo"
 	_ "github.com/go-sql-driver/mysql"
+	"golang.org/x/crypto/bcrypt"
 	"../db"
+	//"../env"
 )
 
 type requestForPUT struct {
@@ -20,6 +23,16 @@ type responseForPUT struct {
 	UserId 		int		`json:"user_id"`
 	Name		string  `json:"name"`
 	Email 		string 	`json:"email"`
+}
+
+func (req *requestForPUT) hashPassword() string {
+	//env.LoadEnv()
+	cost := 10
+	hashPass, err := bcrypt.GenerateFromPassword([]byte((*req).Password), cost)
+	if err != nil {
+		log.Printf("requestForPOST/hashPassword: err = %s", err)
+	}
+	return string(hashPass)
 }
 
 func PutUser(c echo.Context) error {
@@ -37,11 +50,11 @@ func PutUser(c echo.Context) error {
 		log.Printf("[response] %d %s", status, responseData)
 		return c.JSON(status, responseData)
 	} else {
-		return c.JSON(status, http.StatusText(status))
+		return c.JSON(status, nil)
 	}
 }
 
-func createResponseForPutUser(data *UsersTable, status int) (int, *responseForPUT) {
+func createResponseForPutUser(data *db.UsersTable, status int) (int, *responseForPUT) {
 	if status == http.StatusOK {
 		responseData := &responseForPUT{
 			UserId: (*data).UserId,
@@ -63,7 +76,10 @@ func createResponseForPutUser(data *UsersTable, status int) (int, *responseForPU
 	}
 }*/
 
-func updateData(request *requestForPUT) (*UsersTable, int) {
+func updateData(request *requestForPUT) (*db.UsersTable, int) {
+	now := time.Now()
+	formatedTime := now.Format("2006-01-02 15:04:05")
+
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("users/updateData: dbErr = %s", dbErr)
@@ -72,20 +88,21 @@ func updateData(request *requestForPUT) (*UsersTable, int) {
 	defer dbConn.Close()
 
 	stmt, err := dbConn.Prepare(`
-        UPDATE users SET name=?, email=?, password=? WHERE user_id=?
+        UPDATE users SET name=?, email=?, password=?, updated_at=? WHERE user_id=?
 	`)
     if err != nil {
         log.Printf("users/updateData: err = %s", err)
     }
 	defer stmt.Close()
 
-	_, errExecuting := stmt.Exec((*request).Name, (*request).Email, (*request).Password, (*request).UserId)
+	hashPass := request.hashPassword()
+	_, errExecuting := stmt.Exec((*request).Name, (*request).Email, hashPass, formatedTime, (*request).UserId)
 	if errExecuting != nil {
 		log.Printf("users/updateData: errExecuting = %s", errExecuting)
 		return nil, http.StatusInternalServerError
 	}
 
-	user := UsersTable{}
+	user := db.UsersTable{}
 	user.UserId = (*request).UserId
 	user.Name = (*request).Name
 	user.Email = (*request).Email

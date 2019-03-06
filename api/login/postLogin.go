@@ -1,4 +1,4 @@
-package users
+package login
 
 import (
 	"net/http"
@@ -8,7 +8,9 @@ import (
 	"github.com/labstack/echo"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"golang.org/x/crypto/bcrypt"
 	"../db"
+	//"../env"
 )
 
 type requestForGET struct {
@@ -22,7 +24,7 @@ type responseForGET struct {
 	Name		string  `json:"name"`
 }
 
-func GetUser(c echo.Context) error {
+func PostLogin(c echo.Context) error {
 	request := new(requestForGET)
 	if err := c.Bind(request); err != nil {
 		log.Printf("users/GetUser: %s", err)
@@ -37,11 +39,11 @@ func GetUser(c echo.Context) error {
 		log.Printf("[response] %d %s", status, responseData)
 		return c.JSON(status, responseData)
 	} else {
-		return c.JSON(status, http.StatusText(status))
+		return c.JSON(status, nil)
 	}
 }
 
-func createResponseForGetUser(data *UsersTable, status int) (int, *responseForGET) {
+func createResponseForGetUser(data *db.UsersTable, status int) (int, *responseForGET) {
 	if status == http.StatusOK {
 		responseData := &responseForGET{
 			UserId: (*data).UserId,
@@ -63,7 +65,8 @@ func createResponseForGetUser(data *UsersTable, status int) (int, *responseForGE
 	}
 }*/
 
-func selectData(request *requestForGET) (*UsersTable, int) {
+func selectData(request *requestForGET) (*db.UsersTable, int) {
+	//env.LoadEnv()
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("users/selectData: dbErr = %s", dbErr)
@@ -71,13 +74,13 @@ func selectData(request *requestForGET) (*UsersTable, int) {
 	}
 	defer dbConn.Close()
 
-	data, err := dbConn.Query("SELECT * FROM users WHERE email=? AND password=?", (*request).Email, (*request).Password)
+	data, err := dbConn.Query("SELECT * FROM users WHERE email=?", (*request).Email)
 	if err != nil {
 		log.Printf("users/selectData: err = %s", err)
 		return nil, http.StatusInternalServerError
 	}
 
-	user := UsersTable{}
+	user := db.UsersTable{}
 	count := 0
 	
 	for data.Next() {
@@ -109,11 +112,18 @@ func selectData(request *requestForGET) (*UsersTable, int) {
 	}
 	// check whether empty set
 	if count == 0 {
+		return nil, http.StatusBadRequest
+	}
+
+	errComparingPasswd := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte((*request).Password))
+
+	if errComparingPasswd != nil {
+		log.Printf("users/selectUser: errComparingPasswd = %s", errComparingPasswd)
 		if isLockedAccount(dbConn, request) {
 			return nil, http.StatusForbidden
 		}
 		result := increaseFailureCount(dbConn, request)
-		if result == 5 { // use the value in .env
+		if result == 5 {
 			lockAccount(dbConn, request)
 		}
 		return nil, http.StatusUnauthorized
@@ -144,13 +154,13 @@ func increaseFailureCount(dbConn *sql.DB, request *requestForGET) int {
 		os.Exit(1)
 	}
 
-	updateUsers(dbConn, (*request).Email, failureCount)
+	updateUsers(dbConn, (*request).Email, failureCount+1)
 
 	return failureCount+1
 }
 
 func updateUsers(dbConn *sql.DB, email string, failureCount int) {
-	_, err := dbConn.Query("UPDATE users SET failure_count=? WHERE email=?", failureCount+1, email)
+	_, err := dbConn.Query("UPDATE users SET failure_count=? WHERE email=?", failureCount, email)
 	if err != nil {
 		log.Printf("users/updateUsers: err = %s", err)
 		os.Exit(1)
@@ -201,4 +211,13 @@ func isPastedLockingPeriod(dbConn *sql.DB, email string) bool {
 	} else {
 		return false
 	}
+}
+
+func strToTime(str string) time.Time {
+	t, err := time.Parse("2006-01-02 15:04:05", str)
+	if err != nil {
+		log.Printf("users/strToTime: err = %s", err)
+		os.Exit(1)
+	}
+	return t
 }

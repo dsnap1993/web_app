@@ -1,12 +1,16 @@
 package main
 
 import (
+	"os"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"./users"
+	"./login"
+	"./env"
 )
 
 func main() {
+	env.LoadEnv()
 	e := echo.New()
 
 	// middleware
@@ -14,10 +18,13 @@ func main() {
 	e.Use(middleware.Recover())
 
 	/* routes */
+	pathLogin := os.Getenv("PATH_COMMON") + os.Getenv("PATH_LOGIN")
+	pathUser := os.Getenv("PATH_COMMON") + os.Getenv("PATH_USERS")
+	// /login
+	e.POST(pathLogin, login.PostLogin)
 	// /users
-	e.GET("/users", users.GetUser)
-	e.POST("/users", users.PostUser)
-	e.PUT("/users", users.PutUser)
+	e.POST(pathUser, users.PostUser)
+	e.PUT(pathUser, users.PutUser)
 
 	//e.Logger.Fatal(e.Start(":3000"))
 	e.Start(":3000")

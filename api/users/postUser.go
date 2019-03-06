@@ -7,7 +7,9 @@ import (
 	"time"
 	"github.com/labstack/echo"
 	_ "github.com/go-sql-driver/mysql"
+	"golang.org/x/crypto/bcrypt"
 	"../db"
+	//"../env"
 )
 
 type requestForPOST struct {
@@ -20,6 +22,16 @@ type responseForPOST struct {
 	UserId 		int		`json:"user_id"`
 	Name		string  `json:"name"`
 	Email 		string 	`json:"email"`
+}
+
+func (req *requestForPOST) hashPassword() string {
+	//env.LoadEnv()
+	cost := 10
+	hashPass, err := bcrypt.GenerateFromPassword([]byte((*req).Password), cost)
+	if err != nil {
+		log.Printf("requestForPOST/hashPassword: err = %s", err)
+	}
+	return string(hashPass)
 }
 
 func PostUser(c echo.Context) error {
@@ -37,11 +49,11 @@ func PostUser(c echo.Context) error {
 		log.Printf("[response] %d %s", status, responseData)
 		return c.JSON(status, responseData)
 	} else {
-		return c.JSON(status, http.StatusText(status))
+		return c.JSON(status, nil)
 	}
 }
 
-func createResponseForPostUser(data *UsersTable, status int) (int, *responseForPOST) {
+func createResponseForPostUser(data *db.UsersTable, status int) (int, *responseForPOST) {
 	if status == http.StatusCreated {
 		responseData := &responseForPOST{
 			UserId: (*data).UserId,
@@ -63,7 +75,7 @@ func createResponseForPostUser(data *UsersTable, status int) (int, *responseForP
 	}
 }*/
 
-func insertData(request *requestForPOST) (*UsersTable, int) {
+func insertData(request *requestForPOST) (*db.UsersTable, int) {
 	now := time.Now()
 	formatedTime := now.Format("2006-01-02 15:04:05")
 
@@ -83,13 +95,14 @@ func insertData(request *requestForPOST) (*UsersTable, int) {
     }
 	defer stmt.Close()
 
-	ret, errExecuting := stmt.Exec((*request).Name, (*request).Email, (*request).Password, formatedTime)
+	hashPass := request.hashPassword()
+	ret, errExecuting := stmt.Exec((*request).Name, (*request).Email, hashPass, formatedTime)
 	if errExecuting != nil {
 		log.Printf("users/insertData: errExecuting = %s", errExecuting)
 		return nil, http.StatusInternalServerError
 	}
 
-	user := UsersTable{}
+	user := db.UsersTable{}
 	userId, errLastInsertId := ret.LastInsertId()
 	if errExecuting != nil {
 		log.Printf("users/insertData: errLastInsertId = %s", errLastInsertId)
