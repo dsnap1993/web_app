@@ -24,6 +24,16 @@ type responseForGET struct {
 	Name		string  `json:"name"`
 }
 
+func (request *requestForGET) validate() (bool, string) {
+	errMsg := ""
+	result := true
+	if (*request).Email == "" || (*request).Password == ""{
+		errMsg = "Please check request parameters."
+		result = false
+	}
+	return result, errMsg
+}
+
 func PostLogin(c echo.Context) error {
 	request := new(requestForGET)
 	if err := c.Bind(request); err != nil {
@@ -31,7 +41,12 @@ func PostLogin(c echo.Context) error {
 		os.Exit(1)
 	}
 
-	//validate(request)
+	result, errMsg := request.validate()
+	if result == false {
+		log.Printf("[response] %d %s", status, responseData)
+		return c.JSON(http.StatusBadRequest, errMsg)
+	}
+
 	data, status := selectData(request)
 	status, responseData := createResponseForGetUser(data, status)
 
@@ -39,6 +54,7 @@ func PostLogin(c echo.Context) error {
 		log.Printf("[response] %d %s", status, responseData)
 		return c.JSON(status, responseData)
 	} else {
+		log.Printf("[response] %d %s", status, responseData)
 		return c.JSON(status, nil)
 	}
 }
@@ -55,15 +71,6 @@ func createResponseForGetUser(data *db.UsersTable, status int) (int, *responseFo
 		return status, nil
 	}
 }
-
-/*func validate(request *request, c echo.Context) {
-	if (*request).Email != nil {
-		
-	}
-	if (*request).Password != nil {
-		
-	}
-}*/
 
 func selectData(request *requestForGET) (*db.UsersTable, int) {
 	//env.LoadEnv()
