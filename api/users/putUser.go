@@ -9,6 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
 	"../db"
+	//"../env"
 )
 
 type requestForPUT struct {
@@ -25,8 +26,9 @@ type responseForPUT struct {
 }
 
 func (req *requestForPUT) hashPassword() string {
-	env.LoadEnv()
-	hashPass, err := bcrypt.GenerateFromPassword([]byte((*req).Password), os.GetEnv("COST_FOR_HASHING"))
+	//env.LoadEnv()
+	cost := 10
+	hashPass, err := bcrypt.GenerateFromPassword([]byte((*req).Password), cost)
 	if err != nil {
 		log.Printf("requestForPOST/hashPassword: err = %s", err)
 	}

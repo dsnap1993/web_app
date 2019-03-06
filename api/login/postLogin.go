@@ -8,8 +8,9 @@ import (
 	"github.com/labstack/echo"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	"../db"
 	"golang.org/x/crypto/bcrypt"
+	"../db"
+	//"../env"
 )
 
 type requestForGET struct {
@@ -65,7 +66,7 @@ func createResponseForGetUser(data *db.UsersTable, status int) (int, *responseFo
 }*/
 
 func selectData(request *requestForGET) (*db.UsersTable, int) {
-	env.LoadEnv()
+	//env.LoadEnv()
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("users/selectData: dbErr = %s", dbErr)
@@ -122,7 +123,7 @@ func selectData(request *requestForGET) (*db.UsersTable, int) {
 			return nil, http.StatusForbidden
 		}
 		result := increaseFailureCount(dbConn, request)
-		if result == os.GetEnv("LIMIT_FAILING") {
+		if result == 5 {
 			lockAccount(dbConn, request)
 		}
 		return nil, http.StatusUnauthorized
