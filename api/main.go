@@ -18,8 +18,8 @@ func main() {
 	e.Use(middleware.Recover())
 
 	/* routes */
-	pathLogin := os.GetEnv("PATH_COMMON") + os.GetEnv("PATH_LOGIN")
-	pathUser := os.GetEnv("PATH_COMMON") + os.GetEnv("PATH_USERS")
+	pathLogin := os.Getenv("PATH_COMMON") + os.Getenv("PATH_LOGIN")
+	pathUser := os.Getenv("PATH_COMMON") + os.Getenv("PATH_USERS")
 	// /login
 	e.POST(pathLogin, login.PostLogin)
 	// /users

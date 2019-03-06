@@ -12,12 +12,12 @@ import (
 func ConnectDB() (*sql.DB, error) {
 	env.LoadEnv()
 
-	host := os.GetEnv("DB_HOST")
-	port := os.GetEnv("DB_PORT")
-	user := os.GetEnv("DB_USER")
-	passwd := os.GetEnv("DB_PASSWD")
-	dbname := os.GetEnv("DB_NAME")
-	protocol := os.GetEnv("DB_PROTOCOL")
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	passwd := os.Getenv("DB_PASSWD")
+	dbname := os.Getenv("DB_NAME")
+	protocol := os.Getenv("DB_PROTOCOL")
 
 	connectionInfo := fmt.Sprintf("%s:%s@%s(%s:%s)/%s",
 		user, passwd, protocol, host, port, dbname)
