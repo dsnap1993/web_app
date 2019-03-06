@@ -3,7 +3,7 @@ CREATE TABLE `web_app`.`users` (
     `user_id` INT(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `name` VARCHAR(20) NOT NULL,
     `email` VARCHAR(20) NOT NULL,
-    `password` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(60) NOT NULL,
     `created_at` DATETIME NOT NULL,
     `updated_at` DATETIME DEFAULT 0,
     `is_locked` TINYINT DEFAULT 0,
