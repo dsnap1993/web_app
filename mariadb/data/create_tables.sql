@@ -36,5 +36,23 @@ CREATE TABLE `web_app`.`protocols` (
     `protocol_name` VARCHAR(255) DEFAULT 'unknown'
 ) ENGINE=InnoDB;
 
+/* create global_headers table */
+CREATE TABLE `web_app`.`global_headers` (
+    `global_header_id` INT(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `data_id` INT(10) NOT NULL,
+    `global_header` VARBINARY(50) NOT NULL,
+    FOREIGN KEY(`data_id`) REFERENCES `capture_data`(`data_id`)
+) ENGINE=InnoDB;
+
+/* create packet_data table */
+CREATE TABLE `web_app`.`packet_data` (
+    `packet_data_id` INT(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `data_id` INT(10) NOT NULL,
+    `global_header_id` INT(10) NOT NULL,
+    `packet_data` VARBINARY(1500) NOT NULL,
+    FOREIGN KEY(`data_id`) REFERENCES `capture_data`(`data_id`),
+    FOREIGN KEY(`global_header_id`) REFERENCES `global_headers`(`global_header_id`)
+) ENGINE=InnoDB;
+
 /* insert into users */
 INSERT INTO `web_app`.`users` (`name`, `email`, `password`, `created_at`) VALUES('test', 'test@test.com', 'passwd', NOW());
