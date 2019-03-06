@@ -113,9 +113,10 @@ func selectData(request *requestForGET) (*db.UsersTable, int) {
 		return nil, http.StatusBadRequest
 	}
 
-	resultComparingPasswd := bcrypt.CompareHashAndPassword([]byte((*request).Password), []byte(user.Password))
+	errComparingPasswd := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte((*request).Password))
 
-	if resultComparingPasswd == false {
+	if errComparingPasswd != nil {
+		log.Printf("users/selectUser: errComparingPasswd = %s", errComparingPasswd)
 		if isLockedAccount(dbConn, request) {
 			return nil, http.StatusForbidden
 		}
@@ -151,13 +152,13 @@ func increaseFailureCount(dbConn *sql.DB, request *requestForGET) int {
 		os.Exit(1)
 	}
 
-	updateUsers(dbConn, (*request).Email, failureCount)
+	updateUsers(dbConn, (*request).Email, failureCount+1)
 
 	return failureCount+1
 }
 
 func updateUsers(dbConn *sql.DB, email string, failureCount int) {
-	_, err := dbConn.Query("UPDATE users SET failure_count=? WHERE email=?", failureCount+1, email)
+	_, err := dbConn.Query("UPDATE users SET failure_count=? WHERE email=?", failureCount, email)
 	if err != nil {
 		log.Printf("users/updateUsers: err = %s", err)
 		os.Exit(1)
