@@ -11,3 +11,12 @@ type UsersTable struct {
 	FailureCount int
 	UnlockedAt	 string
 }
+
+type CapDataTable struct {
+	DataId		 int
+	UserId		 int
+	DataName	 string
+	DataSummary	 string
+	CreatedAt	 string
+	FileName	 string
+}
