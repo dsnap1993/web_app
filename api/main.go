@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/middleware"
 	"./users"
 	"./login"
+	"./capture_data"
 	"./env"
 )
 
@@ -20,11 +21,14 @@ func main() {
 	/* routes */
 	pathLogin := os.Getenv("PATH_COMMON") + os.Getenv("PATH_LOGIN")
 	pathUser := os.Getenv("PATH_COMMON") + os.Getenv("PATH_USERS")
-	// /login
+	pathCapData := os.Getenv("PATH_COMMON") + os.Getenv("PATH_CAPDATA")
+	// /login.json
 	e.POST(pathLogin, login.PostLogin)
-	// /users
+	// /users.json
 	e.POST(pathUser, users.PostUser)
 	e.PUT(pathUser, users.PutUser)
+	// /capture_data.json
+	e.GET(pathCapData, capture_data.GetCapData)
 
 	//e.Logger.Fatal(e.Start(":3000"))
 	e.Start(":3000")
