@@ -8,6 +8,7 @@ return array(
     'timeout' => env('API_TIMEOUT'),
     
     /* API Path */
-    'login' => '/login',
-    'users' => '/users',
+    'login' => '/login.json',
+    'users' => '/users.json',
+    'capData' => '/capture_data.json',
 );
