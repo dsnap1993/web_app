@@ -31,13 +31,12 @@ class LoginController extends Controller
     /**
      * Execute Logging in.
      * 
-     * @param  Request $request
+     * @param  LoginRequest $request
      * @return  \Illuminate\Contracts\Support\Renderable
      */
     public function postLogin(LoginRequest $request)
     {
         $request->session()->flush();
-        $requestParams =array();
         $apiPath = config('api.login');
 
         // create request params
@@ -46,7 +45,7 @@ class LoginController extends Controller
             'password' => $request->input('password'),
         );
 
-        // call API GET /users
+        // call API POST /login.json
         $webApi = new WebAPI;
         $response = $webApi->callAPI($requestParams, 'POST', $apiPath);
         Log::debug(__METHOD__ . ' response = ' . print_r($response, true));
