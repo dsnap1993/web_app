@@ -7,5 +7,8 @@ return array(
             'locked' => 'Your account is being locked.',
             'other' => 'It seems an error occured. Try again later. If the error is not resolved, contact to web administrator.',
         ),
+        'dashboard' => array(
+            'fail' => 'A error occured in a server. Try again later. If the error is not resolved, contact to web administrator.',
+        ),
     ),
 );
