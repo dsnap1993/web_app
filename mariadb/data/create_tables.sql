@@ -54,5 +54,5 @@ CREATE TABLE `web_app`.`packet_data` (
     FOREIGN KEY(`global_header_id`) REFERENCES `global_headers`(`global_header_id`)
 ) ENGINE=InnoDB;
 
-/* insert into users */
-INSERT INTO `web_app`.`users` (`name`, `email`, `password`, `created_at`) VALUES('test', 'test@test.com', 'passwd', NOW());
+/* insert into capture_data */
+INSERt INTO capture_data (user_id, data_name, data_summary, created_at, file_name) VALUES(2, "test_data", "test_summary", NOW(), "test_file");
