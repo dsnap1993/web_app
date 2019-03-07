@@ -24,7 +24,7 @@ class DashboardRequest extends Request
     public function rules()
     {
         return [
-            //
+            'user_id' => 'required|int',
         ];
     }
 }
