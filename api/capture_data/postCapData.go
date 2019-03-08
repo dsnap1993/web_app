@@ -50,12 +50,8 @@ func PostCapData(c echo.Context) error {
 	data, status := insertData(request)
 	status, responseData := createResponseForPostCapData(data, status)
 
-	if status == http.StatusCreated {
-		log.Printf("[response] %d %s", status, responseData)
-		return c.JSON(status, responseData)
-	} else {
-		return c.JSON(status, nil)
-	}
+	log.Printf("[response] %d %s", status, responseData)
+	return c.JSON(status, responseData)
 }
 
 func createResponseForPostCapData(data *db.CapDataTable, status int) (int, *responseForPOST) {
