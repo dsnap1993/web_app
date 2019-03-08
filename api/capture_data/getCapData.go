@@ -22,13 +22,8 @@ func GetCapData(c echo.Context) error {
 	data, status := selectCapData(userId)
 	status, responseData := createResponse(data, status)
 
-	if status == http.StatusOK {
-		log.Printf("[response] %d %s", status, responseData)
-		return c.JSON(status, responseData)
-	} else {
-		log.Printf("[response] %d", status)
-		return c.JSON(status, nil)
-	}
+	log.Printf("[response] %d %s", status, responseData)
+	return c.JSON(status, responseData)
 }
 
 func createResponse(data *db.CapDataTable, status int) (int, *responseForGET) {
