@@ -21,7 +21,7 @@ Route::get('/logout', LogoutController::class)->name('logout');
 
 Route::middleware(['auth_user'])->group(function(){
     /* dashboard page */
-    Route::get('/dashboard', 'DashboardController@index');
+    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::put('/dashboard', 'DashboardController@update');
     Route::delete('/dashboard', 'DashboardController@delete');
     //Route::get('/create_user', CreateUserController::class)->name('create_user');
