@@ -13,5 +13,5 @@ return array(
     /* API Path */
     'login' => '/login.json',
     'users' => '/users.json',
-    'capData' => '/capture_data.json',
+    'capture_data' => '/capture_data.json',
 );
