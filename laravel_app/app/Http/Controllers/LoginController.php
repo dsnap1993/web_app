@@ -37,7 +37,7 @@ class LoginController extends Controller
     public function postLogin(LoginRequest $request)
     {
         $request->session()->flush();
-        $apiPath = config('api.login');
+        $apiPath = config('api.ver') . config('api.login');
 
         // create request params
         $requestParams = array(

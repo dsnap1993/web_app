@@ -20,7 +20,7 @@ class AuthUser
 
         // call API GET /users
         $webApi = new WebAPI;
-        $apiPath = config('api.login');
+        $apiPath = config('api.ver') . config('api.login');
 
         $requestParams = array(
             'email' => $request->session()->get('email'),
