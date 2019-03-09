@@ -61,13 +61,8 @@ func PutUser(c echo.Context) error {
 	data, status := updateData(request)
 	status, responseData := createResponseForPutUser(data, status)
 
-	if status == http.StatusOK {
-		log.Printf("[response] %d %s", status, responseData)
-		return c.JSON(status, responseData)
-	} else {
-		log.Printf("[response] %d", status)
-		return c.JSON(status, nil)
-	}
+	log.Printf("[response] %d %s", status, responseData)
+	return c.JSON(status, responseData)
 }
 
 func createResponseForPutUser(data *db.UsersTable, status int) (int, *responseForPUT) {
