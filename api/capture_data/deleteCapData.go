@@ -39,25 +39,13 @@ func DeleteCapData(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errMsg)
 	}
 
-	data, status := deleteData(request)
-	status, responseData := createResponseForDeleteCapData(data, status)
+	responseData, status := deleteData(request)
 
-	log.Printf("[response] %d %s", status, responseData)
-	return c.JSON(status, responseData)
+	log.Printf("[response] %d %s", status, &responseData)
+	return c.JSON(status, &responseData)
 }
 
-func createResponseForDeleteCapData(data *db.CapDataTable, status int) (int, *responseForDELETE) {
-	if status == http.StatusOK {
-		responseData := &responseForDELETE{
-			DataId: (*data).DataId,
-		}
-		return status, responseData
-	} else {
-		return status, nil
-	}
-}
-
-func deleteData(request *requestForDELETE) (*db.CapDataTable, int) {
+func deleteData(request *requestForDELETE) (*responseForDELETE, int) {
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("capture_data/deleteData: dbErr = %s", dbErr)
@@ -79,8 +67,8 @@ func deleteData(request *requestForDELETE) (*db.CapDataTable, int) {
 		return nil, http.StatusInternalServerError
 	}
 
-	capData := db.CapDataTable{}
-	capData.DataId = (*request).DataId
+	data := responseForDELETE{}
+	data.DataId = (*request).DataId
 
-	return &capData, http.StatusOK
+	return &data, http.StatusOK
 }
