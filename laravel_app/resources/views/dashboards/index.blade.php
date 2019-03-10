@@ -7,10 +7,21 @@
                 <div class="card-header">dashboard</div>
 
                 <div class="card-body">
-                Dear {{ Session::get('name') }}, welcome to our web app!<br>
-                @foreach ($array as $data)
-                    {{ $data }}<br>
-                @endforeach
+                    Dear {{ Session::get('name') }}, welcome to our web app!<br>
+                    <table class="data-table">
+                        <tr class="data-table-title">
+                            <th>Data Name</th>
+                            <th>Data Summary</th>
+                            <th>Created At</th>
+                        </tr>
+                        @foreach ($array as $data)
+                            <tr>
+                                <th>{{ $data['data_name'] }}</th>
+                                <th>{{ $data['data_summary'] }}</th>
+                                <th>{{ $data['created_at'] }}</th>
+                            </tr>
+                        @endforeach
+                    </table>
                 </div>
             </div>
         </div>
