@@ -57,27 +57,13 @@ func PostUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errMsg)
 	}
 
-	data, status := insertData(request)
-	status, responseData := createResponseForPostUser(data, status)
+	responseData, status := insertData(request)
 
-	log.Printf("[response] %d %s", status, responseData)
-	return c.JSON(status, responseData)
+	log.Printf("[response] %d %s", status, &responseData)
+	return c.JSON(status, &responseData)
 }
 
-func createResponseForPostUser(data *db.UsersTable, status int) (int, *responseForPOST) {
-	if status == http.StatusCreated {
-		responseData := &responseForPOST{
-			UserId: (*data).UserId,
-			Email: (*data).Email,
-			Name: (*data).Name,
-		}
-		return status, responseData
-	} else {
-		return status, nil
-	}
-}
-
-func insertData(request *requestForPOST) (*db.UsersTable, int) {
+func insertData(request *requestForPOST) (*responseForPOST, int) {
 	now := time.Now()
 	formatedTime := now.Format("2006-01-02 15:04:05")
 
@@ -104,15 +90,15 @@ func insertData(request *requestForPOST) (*db.UsersTable, int) {
 		return nil, http.StatusInternalServerError
 	}
 
-	user := db.UsersTable{}
+	responseData := responseForPOST{}
 	userId, errLastInsertId := ret.LastInsertId()
 	if errExecuting != nil {
 		log.Printf("users/insertData: errLastInsertId = %s", errLastInsertId)
 	}
 
-	user.UserId = int(userId)
-	user.Name = (*request).Name
-	user.Email = (*request).Email
+	responseData.UserId = int(userId)
+	responseData.Name = (*request).Name
+	responseData.Email = (*request).Email
 
-	return &user, http.StatusCreated
+	return &responseData, http.StatusCreated
 }

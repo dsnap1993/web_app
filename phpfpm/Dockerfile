@@ -11,9 +11,13 @@ unzip \
 vim
 
 RUN apt-get update \
-    && apt-get install -y libpq-dev \
+    && apt-get install -y libpq-dev gnupg gnupg2 gnupg1\
     && docker-php-ext-install pdo_mysql pdo_pgsql \
-    mbstring tokenizer ctype json bcmath 
+    mbstring tokenizer ctype json bcmath
+
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y nodejs
+RUN npm install
 
 WORKDIR /var/www/laravel_app
 

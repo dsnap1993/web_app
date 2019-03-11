@@ -47,29 +47,14 @@ func PostCapData(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errMsg)
 	}
 
-	data, status := insertData(request)
-	status, responseData := createResponseForPostCapData(data, status)
+	responseData, status := insertData(request)
 
-	log.Printf("[response] %d %s", status, responseData)
-	return c.JSON(status, responseData)
+	log.Printf("[response] %d %s", status, &responseData)
+	return c.JSON(status, &responseData)
 }
 
-func createResponseForPostCapData(data *db.CapDataTable, status int) (int, *responseForPOST) {
-	if status == http.StatusCreated {
-		responseData := &responseForPOST{
-			DataId: (*data).DataId,
-			DataName: (*data).DataName,
-			DataSummary: (*data).DataSummary,
-			FileName: (*data).FileName,
-			CreatedAt: (*data).CreatedAt,
-		}
-		return status, responseData
-	} else {
-		return status, nil
-	}
-}
 
-func insertData(request *requestForPOST) (*db.CapDataTable, int) {
+func insertData(request *requestForPOST) (*responseForPOST, int) {
 	now := time.Now()
 	formatedTime := now.Format("2006-01-02 15:04:05")
 
@@ -95,17 +80,17 @@ func insertData(request *requestForPOST) (*db.CapDataTable, int) {
 		return nil, http.StatusInternalServerError
 	}
 
-	capData := db.CapDataTable{}
+	responseData := responseForPOST{}
 	dataId, errLastInsertId := ret.LastInsertId()
 	if errExecuting != nil {
 		log.Printf("users/insertData: errLastInsertId = %s", errLastInsertId)
 	}
 
-	capData.DataId = int(dataId)
-	capData.DataName = (*request).DataName
-	capData.DataSummary = (*request).DataSummary
-	capData.CreatedAt = formatedTime
-	capData.FileName = (*request).DataName
+	responseData.DataId = int(dataId)
+	responseData.DataName = (*request).DataName
+	responseData.DataSummary = (*request).DataSummary
+	responseData.CreatedAt = formatedTime
+	responseData.FileName = (*request).DataName
 
-	return &capData, http.StatusCreated
+	return &responseData, http.StatusCreated
 }

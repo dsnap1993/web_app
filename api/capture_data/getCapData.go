@@ -19,31 +19,13 @@ type responseForGET struct {
 
 func GetCapData(c echo.Context) error {
 	userId := c.QueryParam("user_id")
-	data, status := selectCapData(userId)
-	status, responseData := createResponse(data, status)
+	responseData, status := selectCapData(userId)
 
 	log.Printf("[response] %d %s", status, responseData)
 	return c.JSON(status, responseData)
 }
 
-func createResponse(data *db.CapDataTable, status int) (int, *responseForGET) {
-	if status == http.StatusOK {
-		responseData := &responseForGET{
-			DataId: (*data).DataId,
-			UserId: (*data).UserId,
-			DataName: (*data).DataName,
-			DataSummary: (*data).DataSummary,
-			CreatedAt: (*data).CreatedAt,
-			FileName: (*data).FileName,
-		}
-
-		return status, responseData
-	} else {
-		return status, nil
-	}
-}
-
-func selectCapData(userId string) (*db.CapDataTable, int) {
+func selectCapData(userId string) ([]*responseForGET, int) {
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("capture_data/selectCapData: dbErr = %s", dbErr)
@@ -57,7 +39,7 @@ func selectCapData(userId string) (*db.CapDataTable, int) {
 		return nil, http.StatusInternalServerError
 	}
 
-	capData := db.CapDataTable{}
+	response := make([]*responseForGET, 0)
 	count := 0
 	
 	for data.Next() {
@@ -74,16 +56,19 @@ func selectCapData(userId string) (*db.CapDataTable, int) {
 			log.Printf("capture_data/selectCapData: err = %s", err)
 			os.Exit(1)
 		}
-		capData.DataId = dataId
-		capData.UserId = userId
-		capData.DataName = dataName
-		capData.DataSummary = dataSummary
-		capData.CreatedAt = createdAt
-		capData.FileName = fileName
+		responseData := responseForGET{}
+		responseData.DataId = dataId
+		responseData.UserId = userId
+		responseData.DataName = dataName
+		responseData.DataSummary = dataSummary
+		responseData.CreatedAt = createdAt
+		responseData.FileName = fileName
+
+		response = append(response, &responseData)
 	}
 	// check whether empty set
 	if count == 0 {
 		return nil, http.StatusBadRequest
 	}
-	return &capData, http.StatusOK
+	return response, http.StatusOK
 }

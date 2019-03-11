@@ -58,27 +58,13 @@ func PutUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errMsg)
 	}
 
-	data, status := updateData(request)
-	status, responseData := createResponseForPutUser(data, status)
+	responseData, status := updateData(request)
 
-	log.Printf("[response] %d %s", status, responseData)
-	return c.JSON(status, responseData)
+	log.Printf("[response] %d %s", status, &responseData)
+	return c.JSON(status, &responseData)
 }
 
-func createResponseForPutUser(data *db.UsersTable, status int) (int, *responseForPUT) {
-	if status == http.StatusOK {
-		responseData := &responseForPUT{
-			UserId: (*data).UserId,
-			Email: (*data).Email,
-			Name: (*data).Name,
-		}
-		return status, responseData
-	} else {
-		return status, nil
-	}
-}
-
-func updateData(request *requestForPUT) (*db.UsersTable, int) {
+func updateData(request *requestForPUT) (*responseForPUT, int) {
 	now := time.Now()
 	formatedTime := now.Format("2006-01-02 15:04:05")
 
@@ -104,10 +90,10 @@ func updateData(request *requestForPUT) (*db.UsersTable, int) {
 		return nil, http.StatusInternalServerError
 	}
 
-	user := db.UsersTable{}
-	user.UserId = (*request).UserId
-	user.Name = (*request).Name
-	user.Email = (*request).Email
+	responseData := responseForPUT{}
+	responseData.UserId = (*request).UserId
+	responseData.Name = (*request).Name
+	responseData.Email = (*request).Email
 
-	return &user, http.StatusOK
+	return &responseData, http.StatusOK
 }

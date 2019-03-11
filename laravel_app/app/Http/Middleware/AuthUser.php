@@ -18,9 +18,9 @@ class AuthUser
             return redirect()->to('/');
         }
 
-        // call API GET /users
+        // call API POST /login.json
         $webApi = new WebAPI;
-        $apiPath = config('api.login');
+        $apiPath = config('api.ver') . config('api.login');
 
         $requestParams = array(
             'email' => $request->session()->get('email'),

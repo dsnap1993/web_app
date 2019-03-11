@@ -44,27 +44,13 @@ func PutCapData(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errMsg)
 	}
 
-	data, status := updateData(request)
-	status, responseData := createResponseForPutCapData(data, status)
+	responseData, status := updateData(request)
 
-	log.Printf("[response] %d %s", status, responseData)
-	return c.JSON(status, responseData)
+	log.Printf("[response] %d %s", status, &responseData)
+	return c.JSON(status, &responseData)
 }
 
-func createResponseForPutCapData(data *db.CapDataTable, status int) (int, *responseForPUT) {
-	if status == http.StatusOK {
-		responseData := &responseForPUT{
-			DataId: (*data).DataId,
-			DataName: (*data).DataName,
-			DataSummary: (*data).DataSummary,
-		}
-		return status, responseData
-	} else {
-		return status, nil
-	}
-}
-
-func updateData(request *requestForPUT) (*db.CapDataTable, int) {
+func updateData(request *requestForPUT) (*responseForPUT, int) {
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("capture_data/updateData: dbErr = %s", dbErr)
@@ -86,10 +72,10 @@ func updateData(request *requestForPUT) (*db.CapDataTable, int) {
 		return nil, http.StatusInternalServerError
 	}
 
-	capData := db.CapDataTable{}
-	capData.DataId = (*request).DataId
-	capData.DataName = (*request).DataName
-	capData.DataSummary = (*request).DataSummary
+	responseData := responseForPUT{}
+	responseData.DataId = (*request).DataId
+	responseData.DataName = (*request).DataName
+	responseData.DataSummary = (*request).DataSummary
 
-	return &capData, http.StatusOK
+	return &responseData, http.StatusOK
 }
