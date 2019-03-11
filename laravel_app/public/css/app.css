@@ -10661,7 +10661,22 @@ a.text-dark:focus {
 }
 
 #list {
-  width: 100vw;
-  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  border: solid 1px black;
+}
+
+.data-table-title {
+  background-color: #eee;
 }
 
