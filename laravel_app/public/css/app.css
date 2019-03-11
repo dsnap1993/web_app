@@ -10660,7 +10660,8 @@ a.text-dark:focus {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
-.card-body {
-  background: #eeeeee;
+#list {
+  width: 100vw;
+  height: 100vh;
 }
 
