@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.top_bar')
 @section('content')
 <div class="container">
     <div class="row justify-content-center" id="list">
