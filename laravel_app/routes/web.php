@@ -15,6 +15,9 @@
 Route::get('/', IndexController::class);
 Route::get('/login', 'LoginController@show')->name('login');
 Route::post('/login', 'LoginController@postLogin');
+/* register page */
+Route::get('/create_user', 'CreateUserController@index')->name('create_user');
+Route::post('/create_user', 'CreateUserController@store')->name('create_user.store');
 
 /* logout */
 Route::get('/logout', LogoutController::class)->name('logout');
@@ -22,8 +25,7 @@ Route::get('/logout', LogoutController::class)->name('logout');
 Route::middleware(['auth_user'])->group(function(){
     /* dashboard page */
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
-    Route::put('/dashboard', 'DashboardController@update');
-    Route::delete('/dashboard', 'DashboardController@delete');
-    //Route::get('/create_user', CreateUserController::class)->name('create_user');
+    Route::put('/dashboard', 'DashboardController@update')->name('dashboard_update');
+    Route::delete('/dashboard', 'DashboardController@delete')->name('dashboard_delete');
     //Route::get('/capture_packet', CapturePacketController::class)->name('capture_packet');
 });
