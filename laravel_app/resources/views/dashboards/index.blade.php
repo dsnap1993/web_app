@@ -36,6 +36,9 @@
                 </div>
                 <div class="form-group row mb-0">
                     <div class="col-md-8 offset-md-4">
+                        <a class="btn btn-primary" href="{{ route('packet_capture_new') }}">
+                            Capture Packet
+                        </a>
                         <button type="submit" class="btn btn-primary">
                             Modify 
                         </button>
