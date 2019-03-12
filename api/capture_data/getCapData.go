@@ -40,10 +40,8 @@ func selectCapData(userId string) ([]*responseForGET, int) {
 	}
 
 	response := make([]*responseForGET, 0)
-	count := 0
 	
 	for data.Next() {
-		count++
 		var dataId int
 		var userId int
 		var dataName string
@@ -65,10 +63,6 @@ func selectCapData(userId string) ([]*responseForGET, int) {
 		responseData.FileName = fileName
 
 		response = append(response, &responseData)
-	}
-	// check whether empty set
-	if count == 0 {
-		return nil, http.StatusBadRequest
 	}
 	return response, http.StatusOK
 }
