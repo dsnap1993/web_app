@@ -45,11 +45,11 @@
                         <a class="btn btn-primary" href="{{ route('packet_capture_new') }}">
                             Capture Packet
                         </a>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modify" data-href="{{ action('DashboardController@showUpdate') }}">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modify" data-href="{{ action('DashboardController@showUpdate', Session::get('data_id')) }}">
                             Modify 
                         </button>
 
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete" data-href="{{ action('DashboardController@showDelete') }}">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete" data-href="{{ action('DashboardController@showDelete', Session::get('data_id')) }}">
                             Delete
                         </button>
                     </div>
