@@ -27,5 +27,5 @@ Route::middleware(['auth_user'])->group(function(){
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::put('/dashboard', 'DashboardController@update')->name('dashboard_update');
     Route::delete('/dashboard', 'DashboardController@delete')->name('dashboard_delete');
-    //Route::get('/capture_packet', CapturePacketController::class)->name('capture_packet');
+    Route::get('/packet_capture/{data_id}', 'PacketCaptureController@index')->name('packet_capture_index');
 });
