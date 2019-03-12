@@ -4,10 +4,9 @@
     <div class="row justify-content-center" id="list">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">dashboard</div>
+                <div class="card-header">{{ Session::get('name') }}'s dashboard</div>
 
                 <div class="card-body">
-                    Dear {{ Session::get('name') }}, welcome to our web app!<br>
                     <table class="data-table">
                         <tr class="data-table-title">
                             <th>Data Name</th>
@@ -16,7 +15,11 @@
                         </tr>
                         @foreach ($array as $data)
                             <tr>
-                                <th>{{ $data['data_name'] }}</th>
+                                <th>
+                                    <a href="{{ route('packet_capture_index', $data['data_id']) }}">
+                                        {{ $data['data_name'] }}
+                                    </a>
+                                </th>
                                 <th>{{ $data['data_summary'] }}</th>
                                 <th>{{ $data['created_at'] }}</th>
                             </tr>
