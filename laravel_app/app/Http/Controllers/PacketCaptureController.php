@@ -19,7 +19,7 @@ class PacketCaptureController extends Controller
     }
     
     /**
-     * Show dashboard index page
+     * Show packet capture index page
      * 
      * @param   Request     $request
      * @return  \Illuminate\Contracts\Support\Renderable
@@ -47,6 +47,17 @@ class PacketCaptureController extends Controller
             $request->session()->flash('message', $errMsg);
             return view('dashboards.index');
         }*/
+    }
+
+    /**
+     * Show a new packet capture index page
+     * 
+     * @param   Request     $request
+     * @return  \Illuminate\Contracts\Support\Renderable
+     */
+    public function indexNew(Request $request)
+    {
+        return view('packet_capture.index_new');
     }
 
     /**
