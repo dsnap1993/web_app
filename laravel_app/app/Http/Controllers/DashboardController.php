@@ -57,7 +57,7 @@ class DashboardController extends Controller
      */
     public function update(Request $request)
     {
-        $apiPath = config('api.capture_data');
+        $apiPath = config('api.ver') . config('api.capture_data');
         $requestParams = array(
             'data_id' => $request->input('data_id'),
             'data_name' => $request->input('data_name'),
@@ -90,7 +90,7 @@ class DashboardController extends Controller
      */
     public function delete(Request $request)
     {
-        $apiPath = config('api.capture_data');
+        $apiPath = config('api.ver') . config('api.capture_data');
         $requestParams = array(
             'data_id' => $request->input('data_id'),
         );

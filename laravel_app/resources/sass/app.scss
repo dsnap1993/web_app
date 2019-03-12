@@ -13,6 +13,20 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
-.py-4 {
-  background: #eeeeee;
+#list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+table {
+  border-collapse: collapse;
+}
+
+table th, table td {
+  border: solid 1px black;
+}
+
+.data-table-title {
+  background-color: #eee;
 }
