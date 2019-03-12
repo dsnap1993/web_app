@@ -8,22 +8,30 @@
 
                 <div class="card-body">
                     <table class="data-table">
-                        <tr class="data-table-title">
-                            <th>Data Name</th>
-                            <th>Data Summary</th>
-                            <th>Created At</th>
-                        </tr>
-                        @foreach ($array as $data)
-                            <tr>
-                                <th>
-                                    <a href="{{ route('packet_capture_index', $data['data_id']) }}">
-                                        {{ $data['data_name'] }}
-                                    </a>
-                                </th>
-                                <th>{{ $data['data_summary'] }}</th>
-                                <th>{{ $data['created_at'] }}</th>
+                        @if (count($array) >= 1)
+                            <tr class="data-table-title">
+                                <th></th>
+                                <th>Data Name</th>
+                                <th>Data Summary</th>
+                                <th>Created At</th>
                             </tr>
-                        @endforeach
+                            @foreach ($array as $data)
+                                <tr>
+                                    <th>
+                                        <input type="checkbox">
+                                    </th>
+                                    <th>
+                                        <a href="{{ route('packet_capture_index', $data['data_id']) }}">
+                                            {{ $data['data_name'] }}
+                                        </a>
+                                    </th>
+                                    <th>{{ $data['data_summary'] }}</th>
+                                    <th>{{ $data['created_at'] }}</th>
+                                </tr>
+                            @endforeach
+                        @else
+                            There are no capture data. 
+                        @endif
                     </table>
                 </div>
                 <div class="form-group row mb-0">
