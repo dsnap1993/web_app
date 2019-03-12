@@ -50,6 +50,18 @@ class DashboardController extends Controller
     }
 
     /**
+     * Show modifying modal
+     * 
+     * @param   Request    $request
+     * @param   $data_id
+     * @return  \Illuminate\Contracts\Support\Renderable
+     */
+    public function showUpdate(Request $request, $data_id)
+    {
+        return view('dashboards.modals.modify_data', ['data_id' => $data_id]);
+    }
+
+    /**
      * Update capture data on dashboard page
      * 
      * @param   Request    $request
@@ -80,6 +92,18 @@ class DashboardController extends Controller
             $request->session()->flash('message', $errMsg);
             return view('dashboards.index', $errMsg);
         }
+    }
+
+    /**
+     * Show modifying modal
+     * 
+     * @param   Request    $request
+     * @param   $data_id
+     * @return  \Illuminate\Contracts\Support\Renderable
+     */
+    public function showDelete(Request $request, $data_id)
+    {
+        return view('dashboards.modals.delete_data', ['data_id' => $data_id]);
     }
 
     /**
