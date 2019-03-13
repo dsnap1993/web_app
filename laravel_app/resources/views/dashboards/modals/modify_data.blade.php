@@ -31,7 +31,19 @@
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this data?
+                {{ csrf_field() }}
+                <div>
+                    <label>Data Name</label>
+                    <input type="text" value="{{ $data['data_name'] }}" />
+                </div>
+                <div>
+                    <label>Data Summary</label>
+                    <input type="text" value="{{ $data['data_summary'] }}" />
+                </div>
+                <div>
+                    <label>File Name</label>
+                    <input type="text" value="{{ $data['file_name'] }}" />
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

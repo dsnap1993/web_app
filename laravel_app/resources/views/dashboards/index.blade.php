@@ -19,7 +19,7 @@
                             @foreach ($array as $data)
                                 <tr>
                                     <th>
-                                        <input type="checkbox">
+                                        <input type="checkbox" id="checkbox-dashboard" value="{{ $data['data_id'] }}">
                                     </th>
                                     <th>
                                         <a href="{{ route('packet_capture_index', $data['data_id']) }}">
@@ -45,14 +45,23 @@
                         <a class="btn btn-primary" href="{{ route('packet_capture_new') }}">
                             Capture Packet
                         </a>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modify" data-href="{{ action('DashboardController@showUpdate', Session::get('data_id')) }}">
+                        <button type="button" class="btn btn-primary" id="dashboard-modify">
                             Modify 
                         </button>
-
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete" data-href="{{ action('DashboardController@showDelete', Session::get('data_id')) }}">
+                        <button type="button" class="btn btn-primary" id="dashboard-delete">
                             Delete
                         </button>
                     </div>
+                    @if (!empty($array))
+                        <form id="form-dashboard-modify" method="get" action="{{ action('DashboardController@showUpdate') }}">
+                            {{ csrf_field() }}
+                           <input type="hidden" name="data_id" value="">
+                        </form>
+                        <form id="form-dashboard-delete" method="post" action="{{ action('DashboardController@showDelete') }}">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="data_id" value="">
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>
