@@ -19,13 +19,19 @@ type responseForGET struct {
 
 func GetCapData(c echo.Context) error {
 	userId := c.QueryParam("user_id")
-	responseData, status := selectCapData(userId)
+	dataId := c.QueryParam("data_id")
+	requestParams := map[string]string {
+		"user_id": userId,
+		"data_id": dataId,
+	}
+
+	responseData, status := selectCapData(requestParams)
 
 	log.Printf("[response] %d %s", status, responseData)
 	return c.JSON(status, responseData)
 }
 
-func selectCapData(userId string) ([]*responseForGET, int) {
+func selectCapData(requestParams map[string]string) ([]*responseForGET, int) {
 	dbConn, dbErr := db.ConnectDB()
 	if dbErr != nil {
 		log.Printf("capture_data/selectCapData: dbErr = %s", dbErr)
@@ -33,7 +39,15 @@ func selectCapData(userId string) ([]*responseForGET, int) {
 	}
 	defer dbConn.Close()
 
-	data, err := dbConn.Query("SELECT * FROM capture_data WHERE user_id=?", userId)
+	sql := "SELECT * FROM capture_data WHERE user_id="
+
+	if requestParams["data_id"] == "" { // check whether being set param, data_id
+		sql = sql + requestParams["user_id"]
+	} else {
+		sql = sql + requestParams["user_id"] + " AND data_id=" + requestParams["data_id"]
+	}
+	log.Printf("capture_data/selectCapData: sql = %s", sql)
+	data, err := dbConn.Query(sql)
 	if err != nil {
 		log.Printf("capture_data/selectCapData: err = %s", err)
 		return nil, http.StatusInternalServerError
