@@ -41,12 +41,13 @@ func selectCapData(requestParams map[string]string) ([]*responseForGET, int) {
 
 	sql := "SELECT * FROM capture_data WHERE user_id="
 
-	if requestParams["data_id"] == "" { // check whether being set param, data_id
+	// check whether being set param, data_id
+	if requestParams["data_id"] == "" {
 		sql = sql + requestParams["user_id"]
 	} else {
 		sql = sql + requestParams["user_id"] + " AND data_id=" + requestParams["data_id"]
 	}
-	log.Printf("capture_data/selectCapData: sql = %s", sql)
+
 	data, err := dbConn.Query(sql)
 	if err != nil {
 		log.Printf("capture_data/selectCapData: err = %s", err)
