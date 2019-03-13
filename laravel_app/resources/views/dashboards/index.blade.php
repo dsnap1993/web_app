@@ -15,6 +15,7 @@
                                 <th>Data Summary</th>
                                 <th>File Name</th>
                                 <th>Created At</th>
+                                <th></th>
                             </tr>
                             @foreach ($array as $data)
                                 <tr>
@@ -33,35 +34,20 @@
                                         </a>
                                     </th>
                                     <th>{{ $data['created_at'] }}</th>
+                                    <th>
+                                        <button type="button" class="btn btn-primary" id="dashboard-modify">
+                                            Modify 
+                                        </button>
+                                        <button type="button" class="btn btn-primary" id="dashboard-delete">
+                                            Delete
+                                        </button>
+                                    </th>
                                 </tr>
                             @endforeach
                         @else
                             There are no capture data. 
                         @endif
                     </table>
-                </div>
-                <div class="form-group row mb-0">
-                    <div class="col-md-8 offset-md-4">
-                        <a class="btn btn-primary" href="{{ route('packet_capture_new') }}">
-                            Capture Packet
-                        </a>
-                        <button type="button" class="btn btn-primary" id="dashboard-modify">
-                            Modify 
-                        </button>
-                        <button type="button" class="btn btn-primary" id="dashboard-delete">
-                            Delete
-                        </button>
-                    </div>
-                    @if (!empty($array))
-                        <form id="form-dashboard-modify" method="get" action="{{ action('DashboardController@showUpdate') }}">
-                            {{ csrf_field() }}
-                           <input type="hidden" name="data_id" value="">
-                        </form>
-                        <form id="form-dashboard-delete" method="post" action="{{ action('DashboardController@showDelete') }}">
-                            {{ csrf_field() }}
-                            <input type="hidden" name="data_id" value="">
-                        </form>
-                    @endif
                 </div>
             </div>
         </div>
