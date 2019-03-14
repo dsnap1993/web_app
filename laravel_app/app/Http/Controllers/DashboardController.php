@@ -50,39 +50,6 @@ class DashboardController extends Controller
     }
 
     /**
-     * Show "modify" modal
-     * 
-     * @param   Request    $request
-     * @param   $data_id
-     * @return  \Illuminate\Contracts\Support\Renderable
-     */
-    public function showUpdate(Request $request)
-    {
-        $apiPath = config('api.ver') . config('api.capture_data');
-        $requestParams = array(
-            'user_id' => $request->session()->get('user_id'),
-            'data_id' => $request->input('data_id'),
-        );
-
-        // call API GET /capture_data.json
-        $webApi = new WebAPI;
-        $response = $webApi->callAPI($requestParams, 'GET', $apiPath);
-        Log::debug(__METHOD__ . ' response = ' . print_r($response, true));
-
-        // set response data in session
-        $data = json_decode($response['body'], true);
-        Log::debug(__METHOD__ . ' data = ' . print_r($data, true));
-
-        if ($response['statusCode'] === 200) {
-            return view('dashboards.modals.modify_data', compact('data'));
-        } else {
-            $errMsg = config('messages.error.dashboard.fail');
-            $request->session()->flash('message', $errMsg);
-            return view('dashboards.index');
-        }
-    }
-
-    /**
      * Update capture data on dashboard page
      * 
      * @param   Request    $request
@@ -113,18 +80,6 @@ class DashboardController extends Controller
             $request->session()->flash('message', $errMsg);
             return view('dashboards.index', $errMsg);
         }
-    }
-
-    /**
-     * Show "delete" modal
-     * 
-     * @param   Request    $request
-     * @param   $data_id
-     * @return  \Illuminate\Contracts\Support\Renderable
-     */
-    public function showDelete(Request $request, $data_id)
-    {
-        return view('dashboards.modals.delete_data', ['data_id' => $data_id]);
     }
 
     /**
