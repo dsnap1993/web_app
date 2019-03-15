@@ -24,8 +24,10 @@ Route::get('/logout', LogoutController::class)->name('logout');
 Route::middleware(['auth_user'])->group(function(){
     /* dashboard page */
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
-    Route::put('/dashboard', 'DashboardController@update')->name('dashboard_update');
-    Route::delete('/dashboard', 'DashboardController@delete')->name('dashboard_delete');
+    Route::get('/dashboard/update', 'DashboardController@update')->name('dashboard_update');
+    Route::get('/dashboard/delete', 'DashboardController@delete')->name('dashboard_delete');
+    Route::put('/dashboard/update', 'DashboardController@update')->name('dashboard_update');
+    Route::delete('/dashboard/delete', 'DashboardController@delete')->name('dashboard_delete');
     /* packet capture page */
     Route::get('/packet_capture/{data_id}', 'PacketCaptureController@index')->name('packet_capture_index');
     Route::get('/packet_capture', 'PacketCaptureController@indexNew')->name('packet_capture_new');
