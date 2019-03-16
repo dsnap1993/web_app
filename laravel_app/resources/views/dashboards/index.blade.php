@@ -40,6 +40,9 @@
                             There are no capture data. 
                         @endif
                     </table>
+                    <a class="btn btn-primary" href="{{ route('packet_capture_new') }}">
+                        Packet Capture
+                    </a>
                 </div>
             </div>
         </div>
@@ -49,7 +52,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header" id="editModalHeader">
-                <h5 class="modal-title" id="editModalLabel">Editing</h5>
+                <h5 class="modal-title" id="editModalLabel">Edit Data</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
                 <span aria-hidden="true">×</span>
                 </button>
@@ -59,18 +62,18 @@
                 {{ csrf_field() }}
                 <div class="form-group">
                     <label>Data Name</label>
-                    <input type="text" id="modal-data-name">
+                    <input type="text" name="data_name" id="modal-data-name">
                 </div>
                 <div class="form-group">
                     <label>Data Summary</label>
-                    <input type="text" id="modal-data-summary">
+                    <input type="text" name="data_summary" id="modal-data-summary">
                 </div>
                 <div class="form-group">
                     <label>File Name</label>
-                    <input type="text" id="modal-file-name">
+                    <input type="text" name="file_name" id="modal-file-name">
                 </div>
                 <div class="form-group">
-                    <input type="hidden" id="edit-data-id">
+                    <input type="hidden" name="data_id" id="edit-data-id">
                 </div>
             </div>
             <div class="modal-footer">
@@ -95,7 +98,7 @@
             <div class="modal-body">
                 Are you sure you want to delete this data?
                 <div class="form-group">
-                    <input type="hidden" id="delete-data-id">
+                    <input type="hidden" name="data_id" id="delete-data-id">
                 </div>
             </div>
             <div class="modal-footer">
