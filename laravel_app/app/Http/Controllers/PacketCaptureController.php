@@ -61,23 +61,23 @@ class PacketCaptureController extends Controller
     }
 
     /**
-     * Update capture data on dashboard page
+     * Create new capture data
      * 
      * @param   Request    $request
      * @return  \Illuminate\Contracts\Support\Renderable
      */
-    public function update(Request $request)
+    public function store(Request $request)
     {
         $apiPath = config('api.ver') . config('api.capture_data');
         $requestParams = array(
-            'data_id' => $request->input('data_id'),
+            'user_id' => $request->session()->get('user_id'),
             'data_name' => $request->input('data_name'),
             'data_summary' => $request->input('data_summary'),
         );
 
-        // call API PUT /capture_data.json
+        // call API POST /capture_data.json
         $webApi = new WebAPI;
-        $response = $webApi->callAPI($requestParams, 'PUT', $apiPath);
+        $response = $webApi->callAPI($requestParams, 'POST', $apiPath);
         Log::debug(__METHOD__ . ' response = ' . print_r($response, true));
 
         // set response data in session
@@ -85,42 +85,11 @@ class PacketCaptureController extends Controller
         Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
 
         if ($response['statusCode'] === 200) {
-            return view('dashboards.index', compact('array'));
+            return redirect()->to('/dashboard');
         } else {
             $errMsg = config('messages.error.dashboard.fail');
             $request->session()->flash('message', $errMsg);
-            return view('dashboards.index', $errMsg);
-        }
-    }
-
-    /**
-     * Delete capture data on dashboard page
-     * 
-     * @param   Request    $request
-     * @return  \Illuminate\Contracts\Support\Renderable
-     */
-    public function delete(Request $request)
-    {
-        $apiPath = config('api.ver') . config('api.capture_data');
-        $requestParams = array(
-            'data_id' => $request->input('data_id'),
-        );
-
-        // call API DELETE /capture_data.json
-        $webApi = new WebAPI;
-        $response = $webApi->callAPI($requestParams, 'DELETE', $apiPath);
-        Log::debug(__METHOD__ . ' response = ' . print_r($response, true));
-
-        // set response data in session
-        $array = json_decode($response['body'], true);
-        Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
-
-        if ($response['statusCode'] === 200) {
-            return view('dashboards.index', compact('array'));
-        } else {
-            $errMsg = config('messages.error.dashboard.fail');
-            $request->session()->flash('message', $errMsg);
-            return view('dashboards.index', $errMsg);
+            return redirect()->back();
         }
     }
 }
