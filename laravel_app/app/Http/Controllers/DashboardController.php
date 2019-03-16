@@ -45,7 +45,7 @@ class DashboardController extends Controller
         } else {
             $errMsg = config('messages.error.dashboard.fail');
             $request->session()->flash('message', $errMsg);
-            return view('dashboards.index');
+            return redirect()->back();
         }
     }
 
@@ -59,9 +59,10 @@ class DashboardController extends Controller
     {
         $apiPath = config('api.ver') . config('api.capture_data');
         $requestParams = array(
-            'data_id' => $request->input('data_id'),
+            'data_id' => (int)$request->input('data_id'),
             'data_name' => $request->input('data_name'),
             'data_summary' => $request->input('data_summary'),
+            'file_name' => $request->input('file_name'),
         );
 
         // call API PUT /capture_data.json
@@ -74,11 +75,11 @@ class DashboardController extends Controller
         Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
 
         if ($response['statusCode'] === 200) {
-            return view('dashboards.index', compact('array'));
+            return redirect()->to('/dashboard');
         } else {
             $errMsg = config('messages.error.dashboard.fail');
             $request->session()->flash('message', $errMsg);
-            return view('dashboards.index', $errMsg);
+            return redirect()->back();
         }
     }
 
@@ -92,7 +93,7 @@ class DashboardController extends Controller
     {
         $apiPath = config('api.ver') . config('api.capture_data');
         $requestParams = array(
-            'data_id' => $request->input('data_id'),
+            'data_id' => (int)$request->input('data_id'),
         );
 
         // call API DELETE /capture_data.json
@@ -105,11 +106,11 @@ class DashboardController extends Controller
         Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
 
         if ($response['statusCode'] === 200) {
-            return view('dashboards.index', compact('array'));
+            return redirect()->to('/dashboard');
         } else {
             $errMsg = config('messages.error.dashboard.fail');
             $request->session()->flash('message', $errMsg);
-            return view('dashboards.index', $errMsg);
+            return redirect()->back();
         }
     }
 }
