@@ -13,6 +13,7 @@ type requestForPUT struct {
 	DataId 		int		`json:"data_id"`
 	DataName	string  `json:"data_name"`
 	DataSummary	string 	`json:"data_summary"`
+	FileName	string	`json:"file_name"`
 }
 
 type responseForPUT struct {
@@ -24,7 +25,7 @@ type responseForPUT struct {
 func (request *requestForPUT) validate() (bool, string) {
 	errMsg := ""
 	result := true
-	if (*request).DataId == 0 || (*request).DataName == "" || (*request).DataSummary == "" {
+	if (*request).DataId == 0 || (*request).DataName == "" || (*request).DataSummary == "" || (*request).FileName == "" {
 		errMsg = "Please check request parameters."
 		result = false
 	}
@@ -59,14 +60,14 @@ func updateData(request *requestForPUT) (*responseForPUT, int) {
 	defer dbConn.Close()
 
 	stmt, err := dbConn.Prepare(`
-        UPDATE capture_data SET data_name=?, data_summary=? WHERE data_id=?
+        UPDATE capture_data SET data_name=?, data_summary=?, file_name=? WHERE data_id=?
 	`)
     if err != nil {
         log.Printf("capture_data/updateData: err = %s", err)
     }
 	defer stmt.Close()
 
-	_, errExecuting := stmt.Exec((*request).DataName, (*request).DataSummary, (*request).DataId)
+	_, errExecuting := stmt.Exec((*request).DataName, (*request).DataSummary, (*request).FileName, (*request).DataId)
 	if errExecuting != nil {
 		log.Printf("capture_data/updateData: errExecuting = %s", errExecuting)
 		return nil, http.StatusInternalServerError
