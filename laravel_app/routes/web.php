@@ -31,4 +31,6 @@ Route::middleware(['auth_user'])->group(function(){
     /* packet capture page */
     Route::get('/packet_capture/{data_id}', 'PacketCaptureController@index')->name('packet_capture_index');
     Route::get('/packet_capture', 'PacketCaptureController@indexNew')->name('packet_capture_new');
+    Route::get('/packet_capture/create', 'PacketCaptureController@store')->name('capture_data_create');
+    Route::post('/packet_capture/create', 'PacketCaptureController@store')->name('capture_data_create');
 });
