@@ -13,5 +13,8 @@ return array(
         'users' => array(
             'fail' => 'A error occured in a server. Try again later. If the error is not resolved, contact to web administrator.',
         ),
+        'change_password' => array(
+            'diff' => 'The password is not same as confirm password',
+        ),
     ),
 );
