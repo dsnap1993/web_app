@@ -2,10 +2,8 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center" id="list">
-        <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ Session::get('name') }}'s dashboard</div>
-
                 <div class="card-body">
                     <table class="data-table">
                         @if (count($array) >= 1)
@@ -45,7 +43,6 @@
                     </a>
                 </div>
             </div>
-        </div>
     </div>
     <!-- Modal of Editing -->
     <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
