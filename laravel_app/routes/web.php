@@ -25,12 +25,20 @@ Route::middleware(['auth_user'])->group(function(){
     /* dashboard page */
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::get('/dashboard/update', 'DashboardController@update')->name('dashboard_update');
-    Route::get('/dashboard/delete', 'DashboardController@delete')->name('dashboard_delete');
     Route::put('/dashboard/update', 'DashboardController@update')->name('dashboard_update');
+    Route::get('/dashboard/delete', 'DashboardController@delete')->name('dashboard_delete');
     Route::delete('/dashboard/delete', 'DashboardController@delete')->name('dashboard_delete');
     /* packet capture page */
     Route::get('/packet_capture/{data_id}', 'PacketCaptureController@index')->name('packet_capture_index');
     Route::get('/packet_capture', 'PacketCaptureController@indexNew')->name('packet_capture_new');
     Route::get('/packet_capture/create', 'PacketCaptureController@store')->name('capture_data_create');
     Route::post('/packet_capture/create', 'PacketCaptureController@store')->name('capture_data_create');
+    /* profile page */
+    Route::get('/profile', 'ProfileController@index')->name('profile');
+    Route::get('/profile/edit', 'ProfileController@update')->name('profile_update');
+    Route::put('/profile/edit', 'ProfileController@update')->name('profile_update');
+    /* change password page */
+    Route::get('/change_password', 'ChangePasswdController@index')->name('change_password');
+    Route::get('/change_password/edit', 'ChangePasswdController@update')->name('change_password_update');
+    Route::put('/change_password/edit', 'ChangePasswdController@update')->name('change_password_update');
 });
