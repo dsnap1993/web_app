@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// Find all devices
-	devices, err := pcap.FindAllDevs()
+	/*devices, err := pcap.FindAllDevs()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -23,5 +23,6 @@ func main() {
 			fmt.Println("- IP address: ", address.IP)
 			fmt.Println("- Subnet mask: ", address.Netmask)
 		}
-	}
+	}*/
+	openFile()
 }
