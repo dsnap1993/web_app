@@ -40,7 +40,7 @@ func (req *requestForPUT) hashPassword() string {
 	cost := 10
 	hashPass, err := bcrypt.GenerateFromPassword([]byte((*req).Password), cost)
 	if err != nil {
-		log.Printf("requestForPOST/hashPassword: err = %s", err)
+		log.Printf("requestForPUT/hashPassword: err = %s", err)
 	}
 	return string(hashPass)
 }
