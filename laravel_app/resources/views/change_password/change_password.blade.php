@@ -10,15 +10,15 @@
                         {{ csrf_field() }}
                         <div class="form-group">
                             <label>Current Password</label><br>
-                            <input type="password">
+                            <input type="password" required>
                         </div>
                         <div class="form-group">
                             <label>New Password</label><br>
-                            <input type="text" name="password">
+                            <input type="password" name="password" required>
                         </div>
                         <div class="form-group">
                             <label>Confirm Password</label><br>
-                            <input type="text" name="confirm_passwd">
+                            <input type="password" name="confirm_passwd" required>
                         </div>
                         <button type="button" class="btn btn-secondary" href="{{ route('dashboard') }}">Cancel</button>
                         <input type="submit" class="btn btn-primary" value="Save changes">

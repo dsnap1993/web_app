@@ -63,15 +63,15 @@
                 {{ csrf_field() }}
                 <div class="form-group">
                     <label>Data Name</label>
-                    <input type="text" name="data_name" id="modal-data-name">
+                    <input type="text" name="data_name" id="modal-data-name" required>
                 </div>
                 <div class="form-group">
                     <label>Data Summary</label>
-                    <input type="text" name="data_summary" id="modal-data-summary">
+                    <input type="text" name="data_summary" id="modal-data-summary" required>
                 </div>
                 <div class="form-group">
                     <label>File Name</label>
-                    <input type="text" name="file_name" id="modal-file-name">
+                    <input type="text" name="file_name" id="modal-file-name" required>
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="data_id" id="edit-data-id">

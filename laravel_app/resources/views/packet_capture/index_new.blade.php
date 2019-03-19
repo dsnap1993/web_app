@@ -35,11 +35,11 @@
                 {{ csrf_field() }}
                 <div class="form-group">
                     <label>Data Name</label>
-                    <input type="text" name="data_name">
+                    <input type="text" name="data_name" required>
                 </div>
                 <div class="form-group">
                     <label>Data Summary</label>
-                    <input type="text" name="data_summary">
+                    <input type="text" name="data_summary" required>
                 </div>
             </div>
             <div class="modal-footer">
