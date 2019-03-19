@@ -4,7 +4,7 @@
     <div class="row justify-content-center" id="list">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ Session::get('name') }}'s profile</div>
+                <div class="card-header">Change Password</div>
                 <div class="card-body">
                     <form id="edit-profile" method="PUT" action="{{ route('profile_update') }}">
                         {{ csrf_field() }}
