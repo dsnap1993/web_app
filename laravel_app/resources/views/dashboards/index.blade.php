@@ -1,43 +1,47 @@
 @extends('layouts.top_bar')
 @section('content')
 <div class="container">
-    <div class="row justify-content-center" id="list">
+    <div class="row justify-content-center">
             <div class="card">
                 <div class="card-header">{{ Session::get('name') }}'s dashboard</div>
                 <div class="card-body">
-                    <table class="data-table">
-                        @if (count($array) >= 1)
-                            <tr class="data-table-title">
-                                <th>Data Name</th>
-                                <th>Data Summary</th>
-                                <th>File Name</th>
-                                <th>Created At</th>
-                                <th></th>
-                            </tr>
-                            @foreach ($array as $data)
-                                <tr class="data-row">
-                                    <td class="data-name">
-                                        <a href="{{ route('packet_capture_index', $data['data_id']) }}">{{ $data['data_name'] }}</a>
-                                    </td>
-                                    <td class="data-summary">{{ $data['data_summary'] }}</td>
-                                    <td class="file-name">
-                                        <a href="{{ route('packet_capture_index', $data['data_id']) }}">{{ $data['file_name'] }}</a>
-                                    </td>
-                                    <td>{{ $data['created_at'] }}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary" id="edit-button" data-id="{{ $data['data_id'] }}">
-                                            Edit
-                                        </button>
-                                        <button type="button" class="btn btn-primary" id="delete-button" data-id="{{ $data['data_id'] }}">
-                                            Delete
-                                        </button>
-                                    </td>
+                    @if (count($array) >= 1)
+                        <table class="table">
+                            <thead>
+                                <tr class="data-table-title">
+                                    <th scope="col-xl-12">Data Name</th>
+                                    <th scope="col-xl-12">Data Summary</th>
+                                    <th scope="col-xl-12">File Name</th>
+                                    <th scope="col-xl-12">Created At</th>
+                                    <th scope="col-xl-12"></th>
                                 </tr>
+                            </thead>
+                            @foreach ($array as $data)
+                                <tbody>
+                                    <tr class="data-row">
+                                        <td class="data-name">
+                                            <a href="{{ route('packet_capture_index', $data['data_id']) }}">{{ $data['data_name'] }}</a>
+                                        </td>
+                                        <td class="data-summary">{{ $data['data_summary'] }}</td>
+                                        <td class="file-name">
+                                            <a href="{{ route('packet_capture_index', $data['data_id']) }}">{{ $data['file_name'] }}</a>
+                                        </td>
+                                        <td>{{ $data['created_at'] }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary" id="edit-button" data-id="{{ $data['data_id'] }}">
+                                                Edit
+                                            </button>
+                                            <button type="button" class="btn btn-primary" id="delete-button" data-id="{{ $data['data_id'] }}">
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             @endforeach
-                        @else
-                            There are no capture data. 
-                        @endif
-                    </table>
+                        </table>
+                    @else
+                        There are no capture data. 
+                    @endif
                     <a class="btn btn-primary" href="{{ route('packet_capture_new') }}">
                         Packet Capture
                     </a>
