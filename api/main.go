@@ -2,7 +2,7 @@ package main
 
 import (
 	"os"
-	"time"
+	//"time"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"./users"
@@ -16,7 +16,7 @@ func main() {
 	e := echo.New()
 
 	// log file
-	now := time.Now()
+	/*now := time.Now()
 	formatedTime := now.Format("2006-01-02")
 	fileName := "/" + formatedTime + ".log"
 	fp, err := os.OpenFile("../../logs" + fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
@@ -27,7 +27,7 @@ func main() {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "${host} [${time_rfc3339_nano}] \"${method} ${uri}\" ${status} ${bytes_in} ${bytes_out}\n",
 		Output: fp,
-	}))
+	}))*/
 	e.Use(middleware.Recover())
 
 	/* routes */
