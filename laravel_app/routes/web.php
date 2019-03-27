@@ -18,6 +18,9 @@ Route::post('/login', 'LoginController@postLogin');
 /* register page */
 Route::get('/create_user', 'CreateUserController@index')->name('create_user');
 Route::post('/create_user', 'CreateUserController@store')->name('create_user.store');
+/* forgot password */
+Route::get('/forgot_password', 'ForgotPasswdController@index')->name('forgot_password');
+Route::post('/forgot_password', 'ForgotPasswdController@sendEmail')->name('send_email');
 /* logout */
 Route::get('/logout', LogoutController::class)->name('logout');
 
