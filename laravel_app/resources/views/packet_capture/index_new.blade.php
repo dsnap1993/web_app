@@ -2,21 +2,14 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="card">
-            <div class="card-header">packet data</div>
-            <div class="card-body">
-                <div class="title">{{ __('packet capture') }}</div>
-
-                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#create-modal">
-                    {{ __('Save') }} 
-                </button>
-                <a class="btn btn-primary" href="{{ route('dashboard') }}">
-                    {{ __('Close without saving') }}
-                </a>
-                <div class="form-group row mb-0">
-                    <div class="col-md-8 offset-md-4"></div>
-                </div>
-            </div>
+        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#create-modal">
+            {{ __('Save') }} 
+        </button>
+        <a class="btn btn-primary" href="{{ route('dashboard') }}">
+            {{ __('Close without saving') }}
+        </a>
+        <div class="form-group row mb-0">
+            <div class="col-md-8 offset-md-4"></div>
         </div>
     </div>
 </div>

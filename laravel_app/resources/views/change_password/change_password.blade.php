@@ -1,10 +1,10 @@
 @extends('layouts.top_bar')
 @section('content')
 <div class="container">
-    <div class="row justify-content-center" id="list">
+    <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Change Password</div>
+                <div class="card-header" id="card-header">Change Password</div>
                 <div class="card-body">
                     <form id="edit-profile" method="PUT" action="{{ route('profile_update') }}">
                         {{ csrf_field() }}
@@ -20,7 +20,7 @@
                             <label>Confirm Password</label><br>
                             <input type="password" name="confirm_passwd" required>
                         </div>
-                        <button type="button" class="btn btn-secondary" href="{{ route('dashboard') }}">Cancel</button>
+                        <button type="button" class="btn btn-secondary" onclick="history.back()">Cancel</button>
                         <input type="submit" class="btn btn-primary" value="Save changes">
                     </form>
                 </div>
