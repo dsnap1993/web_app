@@ -10,11 +10,11 @@
                         {{ csrf_field() }}
                         <div class="form-group">
                             <label>Name</label><br>
-                            <input type="text" name="name" id="name" value="{{ $data['name'] }}" required>
+                            <input type="text" name="name" id="name" class="form-control" value="{{ $data['name'] }}" required>
                         </div>
                         <div class="form-group">
                             <label>Email Address</label><br>
-                            <input type="text" name="email" id="email" value="{{ $data['email'] }}" required>
+                            <input type="text" name="email" id="email" class="form-control" value="{{ $data['email'] }}" required>
                         </div>
                         <button type="button" class="btn btn-secondary" onclick="history.back()">Cancel</button>
                         <input type="submit" class="btn btn-primary" value="Save changes">
