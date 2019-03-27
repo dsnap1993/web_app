@@ -34,9 +34,6 @@ class DashboardController extends Controller
         // call API GET /capture_data.json
         $webApi = new WebAPI;
         $response = $webApi->callAPI($requestParams, 'GET', $apiPath);
-        Log::debug(__METHOD__ . ' response = ' . print_r($response, true));
-
-        // set response data in session
         $array = json_decode($response['body'], true);
         Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
 

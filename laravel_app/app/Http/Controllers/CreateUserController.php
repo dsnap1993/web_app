@@ -47,9 +47,6 @@ class CreateUserController extends Controller
         // call API POST /users.json
         $webApi = new WebAPI;
         $response = $webApi->callAPI($requestParams, 'POST', $apiPath);
-        Log::debug(__METHOD__ . ' response = ' . print_r($response, true));
-
-        // set response data in session
         $array = json_decode($response['body'], true);
         Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
 
