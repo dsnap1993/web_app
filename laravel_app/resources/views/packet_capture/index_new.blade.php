@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#create-modal">
-            {{ __('Save') }} 
+            {{ __('Upload file') }}
         </button>
         <a class="btn btn-primary" href="{{ route('dashboard') }}">
             {{ __('Close without saving') }}
@@ -13,7 +13,7 @@
         </div>
     </div>
 </div>
-<!-- Modal of Editing -->
+<!-- Modal of Creating -->
 <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -23,18 +23,21 @@
                 <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form id="create-form" method="POST" action="{{ route('capture_data_create') }}">
+            <form id="create-form" method="POST" enctype="multipart/form-data" action="{{ route('capture_data_create') }}">
             <div class="modal-body">
                 {{ csrf_field() }}
                 <div class="form-group">
                     <label>Data Name</label>
-                    <input type="text" name="data_name" required>
+                    <input type="text" class="form-control" name="data_name" required>
                 </div>
                 <div class="form-group">
                     <label>Data Summary</label>
-                    <input type="text" name="data_summary" required>
+                    <textarea class="form-control" name="data_summary" required></textarea>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label>Pcap File</label>
+                    <input type="file" id="file" name="file" class="form-control" required>
+                </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <input type="submit" class="btn btn-primary" value="Save">
