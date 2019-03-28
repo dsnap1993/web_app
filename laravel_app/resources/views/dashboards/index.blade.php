@@ -22,7 +22,7 @@
                                 </td>
                                 <td class="data-summary">{{ $data['data_summary'] }}</td>
                                 <td class="file-name">
-                                    <a href="{{ route('packet_capture_index', $data['data_id']) }}">{{ $data['file_name'] }}</a>
+                                    <a href="{{ route('download', $data['file_name']) }}">{{ $data['file_name'] }}</a>
                                 </td>
                                 <td>{{ $data['created_at'] }}</td>
                                 <td>
