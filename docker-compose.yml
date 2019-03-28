@@ -55,6 +55,7 @@ services:
     tty: true
     volumes:
       - ./api:/go/src/api
+    command: "go run main.go"
     depends_on:
       - mariadb
     networks:

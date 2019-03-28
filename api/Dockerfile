@@ -16,5 +16,3 @@ RUN go get github.com/joho/godotenv
 
 EXPOSE 3000
 
-#execute main.go
-#CMD ["go", "run", "main.go"]
