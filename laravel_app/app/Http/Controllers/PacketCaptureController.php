@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\WebAPI\WebAPI;
+use App\Http\Controllers\FileController;
 use Log;
 
 class PacketCaptureController extends Controller
@@ -79,6 +80,10 @@ class PacketCaptureController extends Controller
         $webApi = new WebAPI;
         $response = $webApi->callAPI($requestParams, 'POST', $apiPath);
         Log::debug(__METHOD__ . ' response = ' . print_r($response, true));
+
+        // save the pcap file
+        $fileController = new FileController;
+        $fileController->upload($request, $requestParams['data_name']);
 
         // set response data in session
         $array = json_decode($response['body'], true);
