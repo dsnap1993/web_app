@@ -15,6 +15,7 @@ RUN apt-get update \
     && docker-php-ext-install pdo_mysql pdo_pgsql \
     mbstring tokenizer ctype json bcmath
 
+# install node.js 10.x
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install -y nodejs
 RUN npm install
@@ -22,3 +23,4 @@ RUN npm install
 WORKDIR /var/www/laravel_app
 
 RUN composer require guzzlehttp/guzzle
+RUN php artisan storage:link
