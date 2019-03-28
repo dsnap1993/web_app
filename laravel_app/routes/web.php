@@ -44,4 +44,6 @@ Route::middleware(['auth_user'])->group(function(){
     Route::get('/change_password', 'ChangePasswdController@index')->name('change_password');
     Route::get('/change_password/edit', 'ChangePasswdController@update')->name('change_password_update');
     Route::put('/change_password/edit', 'ChangePasswdController@update')->name('change_password_update');
+    /* download or upload a file */
+    Route::get('/download_file/{file_name}', 'FileController@download')->name('download');
 });
