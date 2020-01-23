@@ -5,13 +5,13 @@ return array(
     'url' => env('API_URL'),
 
     /* API VERSION */
-    'ver' => '/api/v0',
+    'ver' => '/api/v1',
 
     /* API TIMEOUT */
     'timeout' => env('API_TIMEOUT'),
     
     /* API Path */
-    'login' => '/login.json',
-    'users' => '/users.json',
-    'capture_data' => '/capture_data.json',
+    'login' => '/login',
+    'users' => '/users',
+    'capture_data' => '/capture_data',
 );
