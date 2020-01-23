@@ -44,9 +44,9 @@ class CreateUserController extends Controller
             'password' => $request->input('password'),
         );
 
-        // call API POST /users.json
+        // call API POST /users
         $webApi = new WebAPI;
-        $response = $webApi->callAPI($requestParams, 'POST', $apiPath);
+        $response = $webApi->callPostAPI($requestParams, $apiPath);
         $array = json_decode($response['body'], true);
         Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
 

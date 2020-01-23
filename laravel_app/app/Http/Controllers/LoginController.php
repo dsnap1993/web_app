@@ -45,9 +45,9 @@ class LoginController extends Controller
             'password' => $request->input('password'),
         );
 
-        // call API POST /login.json
+        // call API POST /login
         $webApi = new WebAPI;
-        $response = $webApi->callAPI($requestParams, 'POST', $apiPath);
+        $response = $webApi->callPostAPI($requestParams, $apiPath);
         $array = json_decode($response['body'], true);
         Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
 
@@ -58,7 +58,6 @@ class LoginController extends Controller
                 $request->session()->put('user_id', $array['user_id']);
                 $request->session()->put('email', $array['email']);
                 $request->session()->put('name', $array['name']);
-                $request->session()->put('password', $requestParams['password']);
                 return redirect()->to('/dashboard');
             case 401:
                 $errMsg = config('messages.error.login.fail');

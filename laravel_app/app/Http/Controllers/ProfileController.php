@@ -45,13 +45,12 @@ class ProfileController extends Controller
         $requestParams = array(
             'user_id' => $request->session()->get('user_id'),
             'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => $request->session()->get('password'),
+            'email' => $request->input('email')
         );
 
         // call API PUT /users.json
         $webApi = new WebAPI;
-        $response = $webApi->callAPI($requestParams, 'PUT', $apiPath);
+        $response = $webApi->callPutAPI($requestParams, $apiPath);
         $array = json_decode($response['body'], true);
         Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
 

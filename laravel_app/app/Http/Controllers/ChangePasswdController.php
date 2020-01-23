@@ -37,7 +37,7 @@ class ChangePasswdController extends Controller
      */
     public function update(Request $request)
     {
-        if ($request->input('password') == $request->input('confirm_passwd')) {
+        if ($request->input('password') !== $request->input('confirm_passwd')) {
             $errMsg = config('messages.error.change_password.diff');
             $request->session()->flash('message', $errMsg);
             return redirect()->back();
@@ -50,9 +50,9 @@ class ChangePasswdController extends Controller
             'password' => $request->input('password'),
         );
 
-        // call API PUT /users.json
+        // call API PUT /users
         $webApi = new WebAPI;
-        $response = $webApi->callAPI($requestParams, 'PUT', $apiPath);
+        $response = $webApi->callPutAPI($requestParams, $apiPath);
         $array = json_decode($response['body'], true);
         Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
 

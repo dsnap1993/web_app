@@ -33,7 +33,7 @@ class DashboardController extends Controller
 
         // call API GET /capture_data.json
         $webApi = new WebAPI;
-        $response = $webApi->callAPI($requestParams, 'GET', $apiPath);
+        $response = $webApi->callGetAPI($requestParams, $apiPath);
         $array = json_decode($response['body'], true);
         Log::debug(__METHOD__ . ' array = ' . print_r($array, true));
 
@@ -64,7 +64,7 @@ class DashboardController extends Controller
 
         // call API PUT /capture_data.json
         $webApi = new WebAPI;
-        $response = $webApi->callAPI($requestParams, 'PUT', $apiPath);
+        $response = $webApi->callPutAPI($requestParams, $apiPath);
         Log::debug(__METHOD__ . ' response = ' . print_r($response, true));
 
         // set response data in session
@@ -93,9 +93,9 @@ class DashboardController extends Controller
             'data_id' => (int)$request->input('data_id'),
         );
 
-        // call API DELETE /capture_data.json
+        // call API DELETE /capture_data
         $webApi = new WebAPI;
-        $response = $webApi->callAPI($requestParams, 'DELETE', $apiPath);
+        $response = $webApi->callDeleteAPI($requestParams, $apiPath);
         Log::debug(__METHOD__ . ' response = ' . print_r($response, true));
 
         // set response data in session
