@@ -3,12 +3,12 @@ package main
 import (
 	"os"
 	//"time"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
-	"./users"
-	"./login"
 	"./capture_data"
 	"./env"
+	"./login"
+	"./users"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 func main() {
@@ -34,12 +34,12 @@ func main() {
 	pathLogin := os.Getenv("PATH_COMMON") + os.Getenv("PATH_LOGIN")
 	pathUser := os.Getenv("PATH_COMMON") + os.Getenv("PATH_USERS")
 	pathCapData := os.Getenv("PATH_COMMON") + os.Getenv("PATH_CAPDATA")
-	// /login.json
+	// /login
 	e.POST(pathLogin, login.PostLogin)
-	// /users.json
+	// /users
 	e.POST(pathUser, users.PostUser)
 	e.PUT(pathUser, users.PutUser)
-	// /capture_data.json
+	// /capture_data
 	e.GET(pathCapData, capture_data.GetCapData)
 	e.POST(pathCapData, capture_data.PostCapData)
 	e.PUT(pathCapData, capture_data.PutCapData)
