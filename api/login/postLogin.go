@@ -1,33 +1,34 @@
 package login
 
 import (
-	"net/http"
+	"database/sql"
 	"log"
+	"net/http"
 	"os"
 	"time"
-	"github.com/labstack/echo"
-	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
-	"golang.org/x/crypto/bcrypt"
+
 	"../db"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/labstack/echo"
+	"golang.org/x/crypto/bcrypt"
 	//"../env"
 )
 
 type request struct {
-	Email 		string 	`json:"email"`
-	Password 	string 	`json:"password"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type response struct {
-	UserId 		int		`json:"user_id"`
-	Email 		string 	`json:"email"`
-	Name		string  `json:"name"`
+	UserId int    `json:"user_id"`
+	Email  string `json:"email"`
+	Name   string `json:"name"`
 }
 
 func (request *request) validate() (bool, string) {
 	errMsg := ""
 	result := true
-	if (*request).Email == "" || (*request).Password == ""{
+	if (*request).Email == "" || (*request).Password == "" {
 		errMsg = "Please check request parameters."
 		result = false
 	}
@@ -37,7 +38,7 @@ func (request *request) validate() (bool, string) {
 func PostLogin(c echo.Context) error {
 	request := new(request)
 	if err := c.Bind(request); err != nil {
-		log.Printf("login/GetUser: %s", err)
+		log.Printf("login/PostLogin: %s", err)
 		os.Exit(1)
 	}
 
@@ -58,8 +59,8 @@ func createResponse(data *db.UsersTable, status int) (int, *response) {
 	if status == http.StatusOK {
 		responseData := &response{
 			UserId: (*data).UserId,
-			Email: (*data).Email,
-			Name: (*data).Name,
+			Email:  (*data).Email,
+			Name:   (*data).Name,
 		}
 		return status, responseData
 	} else {
@@ -84,7 +85,7 @@ func selectData(request *request) (*db.UsersTable, int) {
 
 	user := db.UsersTable{}
 	count := 0
-	
+
 	for data.Next() {
 		count++
 		var userId int
@@ -158,7 +159,7 @@ func increaseFailureCount(dbConn *sql.DB, request *request) int {
 
 	updateUsers(dbConn, (*request).Email, failureCount+1)
 
-	return failureCount+1
+	return failureCount + 1
 }
 
 func updateUsers(dbConn *sql.DB, email string, failureCount int) {
