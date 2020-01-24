@@ -1,28 +1,29 @@
 package users
 
 import (
-	"net/http"
 	"log"
+	"net/http"
 	"os"
 	"time"
-	"github.com/labstack/echo"
-	_ "github.com/go-sql-driver/mysql"
-	"golang.org/x/crypto/bcrypt"
+
 	"../db"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/labstack/echo"
+	"golang.org/x/crypto/bcrypt"
 	//"../env"
 )
 
 type requestForPUT struct {
-	UserId 		int		`json:"user_id"`
-	Name		string  `json:"name"`
-	Email 		string 	`json:"email"`
-	Password 	string 	`json:"password"`
+	UserId   int    `json:"user_id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type responseForPUT struct {
-	UserId 		int		`json:"user_id"`
-	Name		string  `json:"name"`
-	Email 		string 	`json:"email"`
+	UserId int    `json:"user_id"`
+	Name   string `json:"name"`
+	Email  string `json:"email"`
 }
 
 func (request *requestForPUT) validate() (bool, string) {
@@ -38,11 +39,11 @@ func (request *requestForPUT) validate() (bool, string) {
 func (req *requestForPUT) hashPassword() string {
 	//env.LoadEnv()
 	cost := 10
-	hashPass, err := bcrypt.GenerateFromPassword([]byte((*req).Password), cost)
+	hashedPasswd, err := bcrypt.GenerateFromPassword([]byte((*req).Password), cost)
 	if err != nil {
 		log.Printf("requestForPUT/hashPassword: err = %s", err)
 	}
-	return string(hashPass)
+	return string(hashedPasswd)
 }
 
 func PutUser(c echo.Context) error {
@@ -78,13 +79,13 @@ func updateData(request *requestForPUT) (*responseForPUT, int) {
 	stmt, err := dbConn.Prepare(`
         UPDATE users SET name=?, email=?, password=?, updated_at=? WHERE user_id=?
 	`)
-    if err != nil {
-        log.Printf("users/updateData: err = %s", err)
-    }
+	if err != nil {
+		log.Printf("users/updateData: err = %s", err)
+	}
 	defer stmt.Close()
 
-	hashPass := request.hashPassword()
-	_, errExecuting := stmt.Exec((*request).Name, (*request).Email, hashPass, formatedTime, (*request).UserId)
+	hashedPasswd := request.hashPassword()
+	_, errExecuting := stmt.Exec((*request).Name, (*request).Email, hashedPasswd, formatedTime, (*request).UserId)
 	if errExecuting != nil {
 		log.Printf("users/updateData: errExecuting = %s", errExecuting)
 		return nil, http.StatusInternalServerError
